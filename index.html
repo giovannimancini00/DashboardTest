@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard Test</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div id="app">
+        <aside id="sidebar">
+            <nav>
+                <ul>
+                    <li data-section="models">Models</li>
+                    <li data-section="versions">Versions</li>
+                    <li data-section="textures">Textures</li>
+                    <li data-section="parameters">Parameters</li>
+                    <li data-section="sync">Sync</li>
+                </ul>
+            </nav>
+        </aside>
+        <main id="workspace">
+            <header id="top-bar">
+                <input type="text" id="search" placeholder="Search" />
+                <button id="build-push">Build &amp; Push</button>
+                <span id="notifications">🔔</span>
+            </header>
+            <section id="models" class="workspace-section">Models area</section>
+            <section id="versions" class="workspace-section hidden">Versions area</section>
+            <section id="textures" class="workspace-section hidden">Textures area</section>
+            <section id="parameters" class="workspace-section hidden">Parameters area</section>
+            <section id="sync" class="workspace-section hidden">Sync area</section>
+        </main>
+    </div>
+
+    <script src="dashboard.js"></script>
+</body>
+</html>
