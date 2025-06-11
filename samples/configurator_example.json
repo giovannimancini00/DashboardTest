@@ -1,0 +1,24 @@
+{
+  "models": [
+    {
+      "name": "ExampleModel",
+      "versions": [
+        {
+          "version": "1.0",
+          "textures": [
+            "default.png"
+          ],
+          "parameters": {
+            "color": "red",
+            "size": "medium"
+          }
+        }
+      ]
+    }
+  ],
+  "bundleUrl": "https://example.com/bundles/examplemodel.bundle",
+  "metadata": {
+    "description": "Sample configuration for ExampleModel",
+    "author": "ACME Corp"
+  }
+}
