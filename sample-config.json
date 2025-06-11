@@ -1,0 +1,37 @@
+{
+  "models": [
+    {
+      "id": "model01",
+      "name": "Car",
+      "previewUrl": "https://example.com/models/car/preview.png",
+      "fileUrl": "https://example.com/models/car/model.fbx",
+      "versions": [
+        {
+          "versionId": "v1",
+          "timestamp": "2024-01-01T12:00:00Z",
+          "tags": ["initial"]
+        }
+      ]
+    }
+  ],
+  "textures": [
+    {
+      "id": "tex01",
+      "type": "diffuse",
+      "url": "https://example.com/textures/diffuse.png",
+      "tiling": 1,
+      "offset": [0, 0]
+    }
+  ],
+  "parameters": [
+    {
+      "paramName": "Color",
+      "paramType": "color",
+      "defaultValue": "#ffffff",
+      "constraints": {}
+    }
+  ],
+  "bundleUrl": "https://example.com/bundles/car.bundle",
+  "configuratorVersion": "1.0.0",
+  "buildDate": "2024-01-01T12:00:00Z"
+}
