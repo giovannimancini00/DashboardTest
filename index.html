@@ -21,6 +21,9 @@
   <button id="showTexturesBtn" class="px-3 py-1.5 rounded bg-blue-600 text-white text-sm font-medium">
     Gestisci Textures
   </button>
+  <button id="showColorsBtn" class="px-3 py-1.5 rounded bg-blue-600 text-white text-sm font-medium">
+    Gestisci Colori
+  </button>
   <button id="themeToggle"
           class="px-3 py-1.5 rounded bg-blue-600 text-white text-sm font-medium">
     Dark Mode
@@ -418,6 +421,69 @@
       <button id="saveTextureBtn"
               class="px-4 py-1.5 rounded bg-blue-600 text-white font-medium hover:bg-blue-700">
         Salva Texture
+      </button>
+    </div>
+  </div>
+</section>
+
+<!-- ===== COLORS ===== -->
+<section id="colorsSection" class="space-y-8 hidden">
+  <div class="flex justify-between items-center">
+    <h2 class="text-xl font-semibold">Gestione Colori</h2>
+    <button id="addColorBtn"
+            class="flex items-center gap-1 px-3 py-1.5 rounded bg-blue-600 text-white text-sm">
+      <span class="text-lg">＋</span> Nuovo Colore
+    </button>
+  </div>
+
+  <!-- tabella colori -->
+  <div class="overflow-x-auto">
+    <table class="min-w-full divide-y divide-gray-300 dark:divide-gray-700 text-sm
+                   bg-white dark:bg-gray-900 rounded-lg overflow-hidden">
+      <thead class="bg-gray-100 dark:bg-gray-800">
+        <tr>
+          <th class="px-4 py-3 text-left font-semibold">Tipo</th>
+          <th class="px-4 py-3 text-left font-semibold">Collezione</th>
+          <th class="px-4 py-3 text-left font-semibold">Azioni</th>
+        </tr>
+      </thead>
+      <tbody id="colorsTbody"
+             class="divide-y divide-gray-200 dark:divide-gray-800"></tbody>
+    </table>
+  </div>
+
+  <!-- ===== FORM COLORE ===== -->
+  <div id="colorFormWrapper"
+       class="hidden border border-gray-300 dark:border-gray-700 rounded-lg p-6
+              bg-white dark:bg-gray-900 space-y-8">
+
+    <h3 id="colorFormTitle" class="text-lg font-medium">Nuovo Colore</h3>
+
+    <div class="grid sm:grid-cols-2 gap-4">
+      <div>
+        <label class="block text-sm font-medium mb-1">Tipo Colore</label>
+        <input id="colorTypeInput" type="text" placeholder="es. Celeste"
+               class="w-full px-3 py-1.5 rounded border-gray-300 dark:border-gray-600
+                      bg-white dark:bg-gray-800 text-sm" />
+      </div>
+      <div>
+        <label class="block text-sm font-medium mb-1">Collezione (separati da virgola)</label>
+        <input id="colorCollectionInput" type="text" placeholder="es. chiaro, scuro, medio"
+               class="w-full px-3 py-1.5 rounded border-gray-300 dark:border-gray-600
+                      bg-white dark:bg-gray-800 text-sm" />
+      </div>
+    </div>
+
+    <!-- azioni colore -->
+    <div class="flex justify-end gap-3 pt-2">
+      <button id="cancelColorBtn"
+              class="px-4 py-1.5 rounded border border-gray-400 dark:border-gray-600
+                     hover:bg-gray-100 dark:hover:bg-gray-700">
+        Annulla
+      </button>
+      <button id="saveColorBtn"
+              class="px-4 py-1.5 rounded bg-blue-600 text-white font-medium hover:bg-blue-700">
+        Salva
       </button>
     </div>
   </div>
@@ -2326,9 +2392,204 @@ loadTextures(); // Carica le texture all'avvio
 clientsSection.classList.remove('hidden');
 modelsSection.classList.remove('hidden');
 texturesSection.classList.add('hidden');
+colorsSection.classList.add('hidden');
 modelForm.classList.add('hidden'); // Ensure model form is hidden initially
 textureFormWrapper.classList.add('hidden'); // Ensure texture form is hidden initially
+colorFormWrapper.classList.add('hidden'); // Ensure color form is hidden initially
 });
+
+/* -------- COLORS MANAGEMENT -------- */
+// Constants for colors
+const GH_COLORS_CATALOG_PATH = 'Colors/colors_catalog.json';
+
+// DOM elements for colors
+const colorsSection = document.getElementById('colorsSection');
+const showColorsBtn = document.getElementById('showColorsBtn');
+const addColorBtn = document.getElementById('addColorBtn');
+const colorsTbody = document.getElementById('colorsTbody');
+const colorFormWrapper = document.getElementById('colorFormWrapper');
+const colorFormTitle = document.getElementById('colorFormTitle');
+const colorTypeInput = document.getElementById('colorTypeInput');
+const colorCollectionInput = document.getElementById('colorCollectionInput');
+const saveColorBtn = document.getElementById('saveColorBtn');
+const cancelColorBtn = document.getElementById('cancelColorBtn');
+
+// Colors data
+let colors = [];
+let editingColorIndex = null;
+let currentEditingColor = null;
+
+// Load colors from GitHub
+async function loadColors() {
+  showLoading();
+  try {
+    const r = await fetch(`${GH_API_URL}/repos/${GH_REPO}/contents/${GH_COLORS_CATALOG_PATH}`, {
+      headers: { 'Authorization': `token ${GH_TOKEN}` }
+    });
+    
+    if (r.status === 404) {
+      console.warn('⚠️ colors_catalog.json non trovato (prima esecuzione?)');
+      colors = [];
+      return;
+    } else if (!r.ok) {
+      throw new Error(`Errore nel recupero di colors_catalog.json: ${r.status} ${r.statusText}`);
+    }
+    
+    colors = JSON.parse(atob((await r.json()).content));
+    renderColorsTable();
+    console.info('📥 Lista colori caricata da GitHub');
+  } catch (e) {
+    console.error('❌ Errore caricamento lista colori', e);
+  } finally {
+    hideLoading();
+  }
+}
+
+// Save colors catalog to GitHub
+async function saveColorsCatalog() {
+  await putJson(GH_COLORS_CATALOG_PATH, colors, 'Update colors catalog');
+}
+
+// Render colors table
+function renderColorsTable() {
+  colorsTbody.innerHTML = '';
+  for (const [i, c] of colors.entries()) {
+    const tr = document.createElement('tr');
+    tr.className = 'hover:bg-gray-50 dark:hover:bg-gray-800';
+    
+    // Tipo colore
+    const tdType = document.createElement('td');
+    tdType.className = 'px-4 py-3';
+    tdType.textContent = c.type;
+    tr.appendChild(tdType);
+    
+    // Collezione
+    const tdCollection = document.createElement('td');
+    tdCollection.className = 'px-4 py-3';
+    tdCollection.textContent = c.collection.join(', ');
+    tr.appendChild(tdCollection);
+    
+    // Azioni
+    const tdActions = document.createElement('td');
+    tdActions.className = 'px-4 py-3 flex gap-2';
+    
+    const editBtn = document.createElement('button');
+    editBtn.className = 'px-2 py-1 text-xs bg-amber-500 text-white rounded hover:bg-amber-600';
+    editBtn.textContent = 'Modifica';
+    editBtn.dataset.cedit = i;
+    tdActions.appendChild(editBtn);
+    
+    const removeBtn = document.createElement('button');
+    removeBtn.className = 'px-2 py-1 text-xs bg-red-500 text-white rounded hover:bg-red-600';
+    removeBtn.textContent = 'Rimuovi';
+    removeBtn.dataset.cremove = i;
+    tdActions.appendChild(removeBtn);
+    
+    tr.appendChild(tdActions);
+    colorsTbody.appendChild(tr);
+  }
+}
+
+// Show colors section
+showColorsBtn.addEventListener('click', () => {
+  clientsSection.classList.remove('hidden');
+  modelsSection.classList.add('hidden');
+  texturesSection.classList.add('hidden');
+  colorsSection.classList.remove('hidden');
+  loadColors();
+});
+
+// Add new color
+addColorBtn.addEventListener('click', () => {
+  editingColorIndex = null;
+  currentEditingColor = null;
+  colorFormTitle.textContent = 'Nuovo Colore';
+  colorTypeInput.value = '';
+  colorCollectionInput.value = '';
+  colorFormWrapper.classList.remove('hidden');
+});
+
+// Cancel color form
+cancelColorBtn.addEventListener('click', () => {
+  colorFormWrapper.classList.add('hidden');
+});
+
+// Save color
+saveColorBtn.addEventListener('click', async () => {
+  const type = colorTypeInput.value.trim();
+  const collectionStr = colorCollectionInput.value.trim();
+  
+  if (!type) {
+    alert('Inserisci un tipo di colore!');
+    return;
+  }
+  
+  const collection = collectionStr ? collectionStr.split(',').map(item => item.trim()) : [];
+  
+  showLoading();
+  try {
+    const colorObject = {
+      type,
+      collection
+    };
+    
+    if (editingColorIndex === null) {
+      colors.push(colorObject);
+    } else {
+      colors[editingColorIndex] = colorObject;
+    }
+    
+    await saveColorsCatalog();
+    renderColorsTable();
+    colorFormWrapper.classList.add('hidden');
+    alert(editingColorIndex === null ? 'Colore aggiunto con successo!' : 'Colore aggiornato con successo!');
+  } catch (e) {
+    alert(`Errore durante il salvataggio del colore: ${e.message}`);
+    console.error('Errore salvataggio colore:', e);
+  } finally {
+    hideLoading();
+  }
+});
+
+// Delegate edit/remove for colors
+colorsTbody.addEventListener('click', async e => {
+  const edit = e.target.dataset.cedit;
+  const rem = e.target.dataset.cremove;
+  
+  if (edit !== undefined) {
+    editingColorIndex = Number(edit);
+    currentEditingColor = { ...colors[editingColorIndex] };
+    
+    colorFormTitle.textContent = `Modifica Colore: ${currentEditingColor.type}`;
+    colorTypeInput.value = currentEditingColor.type;
+    colorCollectionInput.value = currentEditingColor.collection.join(', ');
+    
+    colorFormWrapper.classList.remove('hidden');
+    window.scrollTo({ top: colorFormWrapper.offsetTop - 20, behavior: 'smooth' });
+  }
+  
+  if (rem !== undefined) {
+    if (!confirm('Sei sicuro di voler rimuovere questo colore? Questa azione è irreversibile!')) {
+      return;
+    }
+    
+    showLoading();
+    try {
+      colors.splice(rem, 1);
+      await saveColorsCatalog();
+      renderColorsTable();
+      alert('Colore rimosso con successo!');
+    } catch (e) {
+      alert(`Errore durante la rimozione del colore: ${e.message}`);
+      console.error('Errore rimozione colore:', e);
+    } finally {
+      hideLoading();
+    }
+  }
+});
+
+// Load colors at startup
+loadColors();
 </script>
 </body>
 </html>

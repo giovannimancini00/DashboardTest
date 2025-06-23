@@ -1,0 +1,22 @@
+[
+  {
+    "type": "Celeste",
+    "collection": ["chiaro", "scuro", "medio"]
+  },
+  {
+    "type": "Rosso",
+    "collection": ["bordeaux", "carminio", "scarlatto", "porpora"]
+  },
+  {
+    "type": "Verde",
+    "collection": ["smeraldo", "oliva", "lime", "acquamarina"]
+  },
+  {
+    "type": "Blu",
+    "collection": ["navy", "cobalto", "indaco", "turchese"]
+  },
+  {
+    "type": "Grigio",
+    "collection": ["chiaro", "scuro", "antracite", "argento"]
+  }
+]
