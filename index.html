@@ -2538,7 +2538,6 @@ saveColorBtn.addEventListener('click', async () => {
   
   const collection = collectionStr ? collectionStr.split(',').map(item => item.trim()) : [];
   
-  showLoading();
   try {
     const colorObject = {
       type,
@@ -2551,15 +2550,20 @@ saveColorBtn.addEventListener('click', async () => {
       colors[editingColorIndex] = colorObject;
     }
     
-    await saveColorsCatalog();
+    // Log the color being added/updated
+    console.log('Colore aggiunto/modificato:', colorObject);
+    
+    // Update UI immediately
     renderColorsTable();
     colorFormWrapper.classList.add('hidden');
+    
+    // Then try to save to GitHub (this is now just logging to console)
+    await saveColorsCatalog();
+    
     alert(editingColorIndex === null ? 'Colore aggiunto con successo!' : 'Colore aggiornato con successo!');
   } catch (e) {
     alert(`Errore durante il salvataggio del colore: ${e.message}`);
     console.error('Errore salvataggio colore:', e);
-  } finally {
-    hideLoading();
   }
 });
 
@@ -2585,17 +2589,19 @@ colorsTbody.addEventListener('click', async e => {
       return;
     }
     
-    showLoading();
     try {
       colors.splice(rem, 1);
-      await saveColorsCatalog();
+      
+      // Update UI immediately
       renderColorsTable();
+      
+      // Then try to save to GitHub (this is now just logging to console)
+      await saveColorsCatalog();
+      
       alert('Colore rimosso con successo!');
     } catch (e) {
       alert(`Errore durante la rimozione del colore: ${e.message}`);
       console.error('Errore rimozione colore:', e);
-    } finally {
-      hideLoading();
     }
   }
 });
