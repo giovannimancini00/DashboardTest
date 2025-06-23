@@ -1,0 +1,2619 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+<meta charset="UTF-8" />
+<title>Sofa Configurator – Dashboard</title>
+
+<!-- Tailwind CSS -->
+<script src="https://cdn.tailwindcss.com"></script>
+<script>tailwind.config = { darkMode: 'class' };</script>
+</head>
+
+<body class="bg-gray-50 text-gray-800 dark:bg-gray-900 dark:text-gray-100 transition-colors">
+
+<!-- ========= HEADER ========= -->
+<header class="flex justify-between items-center px-6 py-4 bg-white dark:bg-gray-800 shadow">
+<h1 class="font-semibold text-lg">Sofa Configurator</h1>
+<div class="flex gap-4">
+  <button id="showModelsBtn" class="px-3 py-1.5 rounded bg-blue-600 text-white text-sm font-medium">
+    Gestisci Modelli
+  </button>
+  <button id="showTexturesBtn" class="px-3 py-1.5 rounded bg-blue-600 text-white text-sm font-medium">
+    Gestisci Textures
+  </button>
+  <button id="showColorsBtn" class="px-3 py-1.5 rounded bg-blue-600 text-white text-sm font-medium">
+    Gestisci Colori
+  </button>
+  <button id="themeToggle"
+          class="px-3 py-1.5 rounded bg-blue-600 text-white text-sm font-medium">
+    Dark Mode
+  </button>
+</div>
+</header>
+
+<!-- ========= MAIN ===== -->
+<main class="p-6 space-y-10">
+
+<!-- ===== CLIENTI ===== -->
+<section id="clientsSection" class="space-y-6">
+  <div class="flex flex-wrap items-center gap-4">
+    <label class="text-sm font-medium">Cliente:</label>
+
+    <select id="clientSelect"
+            class="min-w-[220px] px-3 py-1.5 rounded border border-gray-400 dark:border-gray-600
+                   bg-white dark:bg-gray-800 text-sm">
+      <option value="" disabled selected>Seleziona cliente…</option>
+    </select>
+
+    <button id="addClientBtn"
+            class="flex items-center gap-1 px-3 py-1.5 rounded bg-purple-600 text-white text-sm">
+      <span class="text-lg">＋</span> Cliente
+    </button>
+    <!-- Pulsante per eliminare il cliente -->
+    <button id="deleteClientBtn"
+          class="flex items-center gap-1 px-3 py-1.5 rounded bg-red-600 text-white text-sm hidden">
+      🗑️ Rimuovi Cliente
+    </button>
+  </div>
+</section>
+
+<!-- ===== MODELLI ===== -->
+<section id="modelsSection" class="space-y-8 hidden">
+  <div class="flex justify-between items-center">
+    <h2 id="modelsHeader" class="text-xl font-semibold"></h2>
+
+    <button id="addModelBtn"
+            class="flex items-center gap-1 px-3 py-1.5 rounded bg-green-600 text-white text-sm">
+      <span class="text-lg">＋</span> Nuovo
+    </button>
+  </div>
+
+  <!-- tabella modelli -->
+  <div class="overflow-x-auto">
+    <table class="min-w-full divide-y divide-gray-300 dark:divide-gray-700 text-sm
+                   bg-white dark:bg-gray-900 rounded-lg overflow-hidden">
+      <thead class="bg-gray-100 dark:bg-gray-800">
+        <tr>
+          <th class="px-4 py-3 text-left font-semibold">Cover</th>
+          <th class="px-4 py-3 text-left font-semibold">Name</th>
+          <th class="px-4 py-3 text-left font-semibold">Collection</th>
+          <th class="px-4 py-3 text-left font-semibold">Structure</th>
+          <th class="px-4 py-3 text-left font-semibold">Versions</th>
+          <th class="px-4 py-3 text-left font-semibold">Actions</th>
+        </tr>
+      </thead>
+      <tbody id="modelsTbody"
+             class="divide-y divide-gray-200 dark:divide-gray-800"></tbody>
+    </table>
+  </div>
+
+  <!-- ===== FORM MODELLO ===== -->
+  <div id="modelFormWrapper"
+       class="hidden border border-gray-300 dark:border-gray-700 rounded-lg p-6
+              bg-white dark:bg-gray-900 space-y-8">
+
+    <h3 id="formTitle" class="text-lg font-medium">Nuovo Modello</h3>
+
+    <!-- cover -->
+    <div>
+      <label class="block text-sm font-medium mb-2">Immagine copertina</label>
+      <div class="flex items-center gap-4">
+        <img id="coverPreview"
+             src="https://via.placeholder.com/180x100?text=Cover"
+             alt="Anteprima immagine di copertina"
+             class="w-44 h-24 rounded object-cover border border-gray-300 dark:border-gray-600" />
+        <input id="coverInput" type="file" accept="image/*"
+               class="block text-sm
+                      file:mr-4 file:py-1.5 file:px-3 file:rounded file:border-0
+                      file:bg-blue-600 file:text-white file:text-sm font-medium
+                      hover:file:bg-blue-700" />
+      </div>
+    </div>
+
+    <!-- campi base -->
+    <div class="overflow-x-auto">
+      <table class="min-w-full text-sm divide-y divide-gray-300 dark:divide-gray-700">
+        <tbody class="divide-y divide-gray-200 dark:divide-gray-800">
+          <tr><td class="px-2 py-2 w-56">Nome Modello</td>
+              <td class="px-2 py-2">
+                <input id="nameInput" type="text" placeholder="es. CINXIA"
+                       class="w-full px-3 py-1.5 rounded border-gray-300 dark:border-gray-600
+                              bg-white dark:bg-gray-800" />
+              </td></tr>
+          <tr><td class="px-2 py-2">Collezione</td>
+              <td class="px-2 py-2">
+                <input id="collectionInput" type="text" placeholder="es. Glam-More"
+                       class="w-full px-3 py-1.5 rounded border-gray-300 dark:border-gray-600
+                              bg-white dark:bg-gray-800" />
+              </td></tr>
+          <tr><td class="px-2 py-2">Struttura</td>
+              <td class="px-2 py-2">
+                <input id="structureInput" type="text" placeholder="es. Abete + multistrato"
+                       class="w-full px-3 py-1.5 rounded border-gray-300 dark:border-gray-600
+                              bg-white dark:bg-gray-800" />
+              </td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <!-- ===== VERSIONS ===== -->
+    <div>
+      <div class="flex justify-between items-center mb-4">
+        <h4 class="font-medium">Versions (.glb)</h4>
+        <button id="addPieceBtn"
+                class="flex items-center gap-1 px-3 py-1.5 rounded bg-emerald-600 text-white text-sm">
+          <span class="text-lg">＋</span> Versione
+        </button>
+      </div>
+
+      <!-- tabella pezzi -->
+      <div class="overflow-x-auto">
+        <table class="min-w-full divide-y divide-gray-300 dark:divide-gray-700 text-sm">
+          <thead class="bg-gray-100 dark:bg-gray-800">
+            <tr>
+              <th class="px-4 py-2 text-left font-semibold">Nome versione</th>
+              <th class="px-4 py-2 text-left font-semibold">Tipologia</th>
+              <th class="px-4 py-2 text-left font-semibold">Posti</th>
+              <th class="px-4 py-2 text-left font-semibold">Bracciolo</th>
+              <th class="px-4 py-2 text-left font-semibold">File GLB</th>
+              <th class="px-4 py-2 text-left font-semibold">Thumbnail</th>
+              <th class="px-4 py-2 text-left font-semibold">Albedo Detail</th>
+              <th class="px-4 py-2 text-left font-semibold">Normal Detail</th>
+              <th class="px-4 py-2 text-left font-semibold">Occlusion Detail</th>
+              <th class="px-4 py-2 text-left font-semibold">Azioni</th>
+            </tr>
+          </thead>
+          <tbody id="piecesTbody"
+                 class="divide-y divide-gray-200 dark:divide-gray-800"></tbody>
+        </table>
+      </div>
+
+      <!-- mini-form pezzo -->
+      <div id="pieceForm" class="hidden mt-4 border border-gray-300 dark:border-gray-700 p-4 rounded-lg">
+        <h5 id="pieceFormTitle" class="font-medium mb-3">Nuova versione</h5>
+
+        <div class="grid sm:grid-cols-2 gap-4 mb-4">
+          <div>
+            <label class="block text-xs font-semibold mb-1">Nome versione</label>
+            <input id="pieceNameInput" type="text" placeholder="es. Chaise L"
+                   class="w-full px-3 py-1.5 rounded border-gray-300 dark:border-gray-600
+                          bg-white dark:bg-gray-800 text-sm" />
+          </div>
+          <div>
+            <label class="block text-xs font-semibold mb-1">Tipologia</label>
+            <select id="pieceTypeInput"
+                    class="w-full px-3 py-1.5 rounded border-gray-300 dark:border-gray-600
+                           bg-white dark:bg-gray-800 text-sm">
+              <option value="" disabled selected>Seleziona tipologia…</option>
+              <option value="Finiti">Finiti</option>
+              <option value="Fissi">Fissi</option>
+              <option value="Motion">Motion</option>
+              <option value="Bed">Bed</option>
+              <option value="Terminali">Terminali</option>
+            </select>
+          </div>
+          <div>
+            <label class="block text-xs font-semibold mb-1">Numero Posti</label>
+            <input id="seatNumbersInput" type="number" placeholder="es. 3"
+                   class="w-full px-3 py-1.5 rounded border-gray-300 dark:border-gray-600
+                          bg-white dark:bg-gray-800 text-sm" />
+          </div>
+          <div>
+            <label class="block text-xs font-semibold mb-1">Bracciolo</label>
+            <select id="armInput"
+                    class="w-full px-3 py-1.5 rounded border-gray-300 dark:border-gray-600
+                           bg-white dark:bg-gray-800 text-sm">
+              <option value="" disabled selected>Seleziona bracciolo…</option>
+              <option value="Left">Left</option>
+              <option value="Right">Right</option>
+              <option value="Both">Both</option>
+              <option value="None">None</option>
+            </select>
+          </div>
+          <div>
+            <label class="block text-xs font-semibold mb-1">File GLB</label>
+            <input id="glbInput" type="file" accept=".glb"
+                   class="block w-full text-sm
+                          file:mr-4 file:py-1.5 file:px-3 file:rounded
+                          file:bg-emerald-600 file:text-white hover:file:bg-emerald-700" />
+          </div>
+        </div>
+
+        <!-- Nuovi campi immagine per le versioni -->
+        <div class="grid sm:grid-cols-2 md:grid-cols-4 gap-4 mt-4">
+          <!-- Thumbnail -->
+          <div>
+            <label class="block text-sm font-medium mb-1">Thumbnail (JPG/PNG)</label>
+            <img id="thumbnailPiecePreview"
+                 src="https://via.placeholder.com/100x100?text=Thumb"
+                 alt="Anteprima Thumbnail"
+                 class="w-24 h-24 rounded object-cover border border-gray-300 dark:border-gray-600 mb-2" />
+            <input id="thumbnailPieceInput" type="file" accept="image/jpeg,image/png"
+                   class="block w-full text-sm file:mr-4 file:py-1.5 file:px-3 file:rounded file:border-0 file:bg-blue-600 file:text-white hover:file:bg-blue-700" />
+          </div>
+          <!-- Albedo Detail -->
+          <div>
+            <label class="block text-sm font-medium mb-1">Albedo Detail (JPG/PNG)</label>
+            <img id="albedoDetailPreview"
+                 src="https://via.placeholder.com/100x100?text=AlbedoD"
+                 alt="Anteprima Albedo Detail"
+                 class="w-24 h-24 rounded object-cover border border-gray-300 dark:border-gray-600 mb-2" />
+            <input id="albedoDetailInput" type="file" accept="image/jpeg,image/png"
+                   class="block w-full text-sm file:mr-4 file:py-1.5 file:px-3 file:rounded file:border-0 file:bg-blue-600 file:text-white hover:file:bg-blue-700" />
+          </div>
+          <!-- Normal Detail -->
+          <div>
+            <label class="block text-sm font-medium mb-1">Normal Detail (JPG/PNG)</label>
+            <img id="normalDetailPreview"
+                 src="https://via.placeholder.com/100x100?text=NormalD"
+                 alt="Anteprima Normal Detail"
+                 class="w-24 h-24 rounded object-cover border border-gray-300 dark:border-gray-600 mb-2" />
+            <input id="normalDetailInput" type="file" accept="image/jpeg,image/png"
+                   class="block w-full text-sm file:mr-4 file:py-1.5 file:px-3 file:rounded file:border-0 file:bg-blue-600 file:text-white hover:file:bg-blue-700" />
+          </div>
+          <!-- Occlusion Detail -->
+          <div>
+            <label class="block text-sm font-medium mb-1">Occlusion Detail (JPG/PNG)</label>
+            <img id="occlusionDetailPreview"
+                 src="https://via.placeholder.com/100x100?text=OcclusionD"
+                 alt="Anteprima Occlusion Detail"
+                 class="w-24 h-24 rounded object-cover border border-gray-300 dark:border-gray-600 mb-2" />
+            <input id="occlusionDetailInput" type="file" accept="image/jpeg,image/png"
+                   class="block w-full text-sm file:mr-4 file:py-1.5 file:px-3 file:rounded file:border-0 file:bg-blue-600 file:text-white hover:file:bg-blue-700" />
+          </div>
+        </div>
+
+        <div class="flex justify-end gap-3 pt-2">
+          <button id="cancelPieceBtn"
+                  class="px-4 py-1.5 rounded border border-gray-400 dark:border-gray-600
+                         hover:bg-gray-100 dark:hover:bg-gray-700 text-sm">
+            Annulla
+          </button>
+          <button id="savePieceBtn"
+                  class="px-4 py-1.5 rounded bg-emerald-600 text-white text-sm font-medium
+                         hover:bg-emerald-700">
+            Aggiungi
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- azioni modello -->
+    <div class="flex justify-end gap-3 pt-2">
+      <button id="cancelBtn"
+              class="px-4 py-1.5 rounded border border-gray-400 dark:border-gray-600
+                     hover:bg-gray-100 dark:hover:bg-gray-700">
+        Annulla
+      </button>
+      <button id="saveModelBtn"
+              class="px-4 py-1.5 rounded bg-blue-600 text-white font-medium hover:bg-blue-700">
+        Salva
+      </button>
+    </div>
+  </div>
+</section>
+
+<!-- ===== TEXTURES ===== -->
+<section id="texturesSection" class="space-y-8 hidden">
+  <div class="flex justify-between items-center">
+    <h2 class="text-xl font-semibold">Gestione Textures</h2>
+    <button id="addTextureBtn"
+            class="flex items-center gap-1 px-3 py-1.5 rounded bg-blue-600 text-white text-sm">
+      <span class="text-lg">＋</span> Nuova Texture
+    </button>
+  </div>
+
+  <!-- tabella textures -->
+  <div class="overflow-x-auto">
+    <table class="min-w-full divide-y divide-gray-300 dark:divide-gray-700 text-sm
+                   bg-white dark:bg-gray-900 rounded-lg overflow-hidden">
+      <thead class="bg-gray-100 dark:bg-gray-800">
+        <tr>
+          <th class="px-4 py-3 text-left font-semibold">Tipo</th>
+          <th class="px-4 py-3 text-left font-semibold">Nome</th>
+          <th class="px-4 py-3 text-left font-semibold">Albedo</th>
+          <th class="px-4 py-3 text-left font-semibold">Mask</th>
+          <th class="px-4 py-3 text-left font-semibold">Normal</th>
+          <th class="px-4 py-3 text-left font-semibold">RimNoise</th>
+          <th class="px-4 py-3 text-left font-semibold">Thumbnail</th>
+          <th class="px-4 py-3 text-left font-semibold">Azioni</th>
+        </tr>
+      </thead>
+      <tbody id="texturesTbody"
+             class="divide-y divide-gray-200 dark:divide-gray-800"></tbody>
+    </table>
+  </div>
+
+  <!-- ===== FORM TEXTURE ===== -->
+  <div id="textureFormWrapper"
+       class="hidden border border-gray-300 dark:border-gray-700 rounded-lg p-6
+              bg-white dark:bg-gray-900 space-y-8">
+
+    <h3 id="textureFormTitle" class="text-lg font-medium">Nuova Texture</h3>
+
+    <div class="grid sm:grid-cols-2 gap-4">
+      <div>
+        <label class="block text-sm font-medium mb-1">Tipo Texture</label>
+        <select id="textureTypeInput"
+           class="w-full px-3 py-1.5 rounded border-gray-300 dark:border-gray-600
+                  bg-white dark:bg-gray-800 text-sm">
+     <option value="" disabled selected>Seleziona tipo…</option>
+     <option value="Leather">Leather</option>
+     <option value="Fabric">Fabric</option>
+     <option value="Wood">Wood</option>
+     <option value="Metal">Metal</option>
+     <option value="Plastic">Plastic</option>
+     <option value="Stone">Stone</option>
+     <option value="Glass">Glass</option>
+     <option value="Concrete">Concrete</option>
+     <option value="Tile">Tile</option>
+     <option value="Carpet">Carpet</option>
+     <option value="Other">Other</option>
+   </select>
+      </div>
+      <div>
+        <label class="block text-sm font-medium mb-1">Nome Texture</label>
+        <input id="textureNameInput" type="text" placeholder="es. ItalianLeather01"
+               class="w-full px-3 py-1.5 rounded border-gray-300 dark:border-gray-600
+                      bg-white dark:bg-gray-800 text-sm" />
+      </div>
+    </div>
+
+    <div class="grid sm:grid-cols-2 md:grid-cols-4 gap-4">
+      <!-- Albedo -->
+      <div>
+        <label class="block text-sm font-medium mb-1">Albedo (JPG/PNG)</label>
+        <img id="albedoPreview"
+             src="https://via.placeholder.com/100x100?text=Albedo"
+             alt="Anteprima Albedo"
+             class="w-24 h-24 rounded object-cover border border-gray-300 dark:border-gray-600 mb-2" />
+        <input id="albedoInput" type="file" accept="image/jpeg,image/png"
+               class="block w-full text-sm file:mr-4 file:py-1.5 file:px-3 file:rounded file:border-0 file:bg-blue-600 file:text-white hover:file:bg-blue-700" />
+      </div>
+      <!-- Mask -->
+      <div>
+        <label class="block text-sm font-medium mb-1">Mask (JPG/PNG)</label>
+        <img id="maskPreview"
+             src="https://via.placeholder.com/100x100?text=Mask"
+             alt="Anteprima Mask"
+             class="w-24 h-24 rounded object-cover border border-gray-300 dark:border-gray-600 mb-2" />
+        <input id="maskInput" type="file" accept="image/jpeg,image/png"
+               class="block w-full text-sm file:mr-4 file:py-1.5 file:px-3 file:rounded file:border-0 file:bg-blue-600 file:text-white hover:file:bg-blue-700" />
+      </div>
+      <!-- Normal -->
+      <div>
+        <label class="block text-sm font-medium mb-1">Normal (JPG/PNG)</label>
+        <img id="normalPreview"
+             src="https://via.placeholder.com/100x100?text=Normal"
+             alt="Anteprima Normal"
+             class="w-24 h-24 rounded object-cover border border-gray-300 dark:border-gray-600 mb-2" />
+        <input id="normalInput" type="file" accept="image/jpeg,image/png"
+               class="block w-full text-sm file:mr-4 file:py-1.5 file:px-3 file:rounded file:border-0 file:bg-blue-600 file:text-white hover:file:bg-blue-700" />
+      </div>
+      <!-- RimNoise -->
+      <div>
+        <label class="block text-sm font-medium mb-1">RimNoise (JPG/PNG)</label>
+        <img id="rimNoisePreview"
+             src="https://via.placeholder.com/100x100?text=RimNoise"
+             alt="Anteprima RimNoise"
+             class="w-24 h-24 rounded object-cover border border-gray-300 dark:border-gray-600 mb-2" />
+        <input id="rimNoiseInput" type="file" accept="image/jpeg,image/png"
+               class="block w-full text-sm file:mr-4 file:py-1.5 file:px-3 file:rounded file:border-0 file:bg-blue-600 file:text-white hover:file:bg-blue-700" />
+      </div>
+      <!-- Thumbnail -->
+      <div>
+        <label class="block text-sm font-medium mb-1">Thumbnail (JPG/PNG)</label>
+        <img id="thumbnailPreview"
+             src="https://via.placeholder.com/100x100?text=Thumbnail"
+             alt="Anteprima Thumbnail"
+             class="w-24 h-24 rounded object-cover border border-gray-300 dark:border-gray-600 mb-2" />
+        <input id="thumbnailInput" type="file" accept="image/jpeg,image/png"
+               class="block w-full text-sm file:mr-4 file:py-1.5 file:px-3 file:rounded file:border-0 file:bg-blue-600 file:text-white hover:file:bg-blue-700" />
+      </div>
+    </div>
+
+    <div class="flex justify-end gap-3 pt-2">
+      <button id="cancelTextureBtn"
+              class="px-4 py-1.5 rounded border border-gray-400 dark:border-gray-600
+                     hover:bg-gray-100 dark:hover:bg-gray-700">
+        Annulla
+      </button>
+      <button id="saveTextureBtn"
+              class="px-4 py-1.5 rounded bg-blue-600 text-white font-medium hover:bg-blue-700">
+        Salva Texture
+      </button>
+    </div>
+  </div>
+</section>
+
+<!-- ===== COLORI ===== -->
+<section id="colorsSection" class="space-y-8 hidden">
+  <div class="flex justify-between items-center">
+    <h2 class="text-xl font-semibold">Gestione Colori</h2>
+    <button id="addColorBtn"
+            class="flex items-center gap-1 px-3 py-1.5 rounded bg-blue-600 text-white text-sm">
+      <span class="text-lg">＋</span> Nuovo Colore
+    </button>
+  </div>
+
+  <!-- tabella colori -->
+  <div class="overflow-x-auto">
+    <table class="min-w-full divide-y divide-gray-300 dark:divide-gray-700 text-sm
+                   bg-white dark:bg-gray-900 rounded-lg overflow-hidden">
+      <thead class="bg-gray-100 dark:bg-gray-800">
+        <tr>
+          <th class="px-4 py-3 text-left font-semibold">Tipo</th>
+          <th class="px-4 py-3 text-left font-semibold">Collezione</th>
+          <th class="px-4 py-3 text-left font-semibold">Azioni</th>
+        </tr>
+      </thead>
+      <tbody id="colorsTbody"
+             class="divide-y divide-gray-200 dark:divide-gray-800"></tbody>
+    </table>
+  </div>
+
+  <!-- ===== FORM COLORE ===== -->
+  <div id="colorFormWrapper"
+       class="hidden border border-gray-300 dark:border-gray-700 rounded-lg p-6
+              bg-white dark:bg-gray-900 space-y-8">
+
+    <h3 id="colorFormTitle" class="text-lg font-medium">Nuovo Colore</h3>
+
+    <div class="grid sm:grid-cols-2 gap-4">
+      <div>
+        <label class="block text-sm font-medium mb-1">Tipo Colore</label>
+        <input id="colorTypeInput" type="text" placeholder="es. Celeste"
+               class="w-full px-3 py-1.5 rounded border-gray-300 dark:border-gray-600
+                      bg-white dark:bg-gray-800 text-sm" />
+      </div>
+      <div>
+        <label class="block text-sm font-medium mb-1">Collezione (separati da virgola)</label>
+        <input id="colorCollectionInput" type="text" placeholder="es. chiaro, scuro, medio"
+               class="w-full px-3 py-1.5 rounded border-gray-300 dark:border-gray-600
+                      bg-white dark:bg-gray-800 text-sm" />
+      </div>
+    </div>
+
+    <div class="flex justify-end gap-3 pt-2">
+      <button id="cancelColorBtn"
+              class="px-4 py-1.5 rounded border border-gray-400 dark:border-gray-600
+                     hover:bg-gray-100 dark:hover:bg-gray-700">
+        Annulla
+      </button>
+      <button id="saveColorBtn"
+              class="px-4 py-1.5 rounded bg-blue-600 text-white font-medium hover:bg-blue-700">
+        Salva
+      </button>
+    </div>
+  </div>
+</section>
+</main>
+
+<!-- ========= LOADING OVERLAY ========= -->
+<div id="loadingOverlay" class="fixed inset-0 bg-black/50 flex items-center justify-center z-50 hidden">
+<div class="flex flex-col items-center text-white">
+  <svg class="animate-spin h-10 w-10 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+    <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+    <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+  </svg>
+  <p class="mt-3 text-lg">Caricamento...</p>
+</div>
+</div>
+
+<!-- ========= SCRIPT ========= -->
+<script defer>
+document.addEventListener('DOMContentLoaded', () => {
+
+/* ---------- THEME ---------- */
+const html = document.documentElement;
+const themeToggleBtn = document.getElementById('themeToggle');
+const prefersDark = window.matchMedia('(prefers-color-scheme: dark)');
+
+const setTheme = () => {
+  const dark = prefersDark.matches;
+  html.classList.toggle('dark', dark);
+  themeToggleBtn.textContent = dark ? 'Light Mode' : 'Dark Mode';
+};
+setTheme();
+prefersDark.addEventListener('change', setTheme);
+themeToggleBtn.addEventListener('click', () => {
+  const dark = html.classList.toggle('dark');
+  themeToggleBtn.textContent = dark ? 'Light Mode' : 'Dark Mode';
+});
+
+/* ---------- LOADING OVERLAY ---------- */
+const loadingOverlay = document.getElementById('loadingOverlay');
+
+function showLoading() {
+  loadingOverlay.classList.remove('hidden');
+}
+
+function hideLoading() {
+  loadingOverlay.classList.add('hidden');
+}
+
+/* ---------- DATA (local) ---------- */
+// struttura { cliente: true } per la lista clienti
+// clients[currentClient] = [ modelli ] per i modelli del cliente selezionato
+// modello.versions = [ pezzi ]
+const clients = {};
+let currentClient = null;
+let editingIndex  = null;   // indice del modello nella lista clients[currentClient]
+let currentEditingModel = null; // Oggetto completo del modello in fase di modifica
+let piecesCurrent = [];     // array pezzi per il form aperto
+
+// Variabili temporanee per i dati Base64 dei file prima del caricamento su GitHub
+let currentModelCoverDataUrl = null;
+let currentPieceGlbDataUrl = null;
+let currentThumbnailPieceDataUrl = null; // NEW
+let currentAlbedoDetailDataUrl = null;   // NEW
+let currentNormalDetailDataUrl = null;   // NEW
+let currentOcclusionDetailDataUrl = null; // NEW
+
+/* ---------- GITHUB CONFIG ---------- */
+const GH_OWNER = 'RDD-Digital';                 // 🔄 Il tuo user/org
+const GH_REPO  = 'RDD_Dashboard';                // 🔄 Il tuo repo
+const GH_TOKEN = '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'; // ⚠️ ATTENZIONE: TOKEN HARDCODED! NON SICURO PER PRODUZIONE!
+
+const ghHeaders = {
+  'Accept'       : 'application/vnd.github+json',
+  'Authorization': `Bearer ${GH_TOKEN}`,
+  'Content-Type' : 'application/json'
+};
+const GH_BASE_API_URL = `https://api.github.com/repos/${GH_OWNER}/${GH_REPO}/contents/`;
+const GH_RAW_BASE_URL = `https://raw.githubusercontent.com/${GH_OWNER}/${GH_REPO}/main/`; // Nuovo URL base per i raw link
+
+// Nuovi percorsi per i file JSON
+const GH_CLIENTS_PATH          = 'Clients.json';
+const GH_CLIENT_MODELS_PATH    = c => `Clients/${sanitizeFilename(c)}/catalog.json`;
+const GH_SINGLE_MODEL_PATH     = (c, modelName) =>
+        `Clients/${sanitizeFilename(c)}/${sanitizeFilename(modelName)}/model.json`;
+
+// Nuovi percorsi per le Textures
+const GH_TEXTURES_CATALOG_PATH = 'Textures/textures_catalog.json';
+
+// Percorso per i Colori
+const GH_COLORS_CATALOG_PATH = 'Colors/colors_catalog.json';
+
+// Patch 1: Scopri a runtime il branch predefinito (anche se non usato direttamente per le immagini ora)
+let ghDefaultBranch = 'main';            // cambierà se serve
+fetch(`https://api.github.com/repos/${GH_OWNER}/${GH_REPO}`, { headers: ghHeaders })
+  .then(r => r.json())
+  .then(info => { ghDefaultBranch = info.default_branch || 'main'; })
+  .catch(() => console.warn('Impossibile rilevare il branch, uso "main"'));
+
+/* helper: scarica file privato e restituisce un blob-URL -------------- */
+async function fetchPrivateFile(path) {
+  showLoading();
+  try {
+    const url = `${GH_BASE_API_URL}${path}`;
+    console.log(`[fetchPrivateFile] Attempting to fetch: ${path}`);
+    const r   = await fetch(url, { headers: ghHeaders });
+    
+    if (!r.ok) {                     // 404 → placeholder
+      console.error(`[fetchPrivateFile] Error fetching ${path}: ${r.status} ${r.statusText}`);
+      return 'https://via.placeholder.com/180x100?text=404';
+    }
+    const js  = await r.json();      // { content, encoding, truncated, ... }
+    console.log(`[fetchPrivateFile] Raw JS object for ${path}:`, js); // NEW LOG
+    console.log(`[fetchPrivateFile] Type of js.content for ${path}: ${typeof js.content}`); // NEW LOG
+    console.log(`[fetchPrivateFile] Value of js.content for ${path}: '${js.content}'`); // NEW LOG
+    console.log(`[fetchPrivateFile] Received Base64 content for ${path}. Original length: ${js.content ? js.content.length : 'N/A'}`); // Safer length check
+    
+    let rawBase64Content = typeof js.content === 'string' ? js.content : '';
+
+    // Se il file è grande GitHub mette truncated=true o content vuoto.
+    if (!rawBase64Content || js.truncated) {
+      console.log(`[fetchPrivateFile] Content truncated or empty for ${path}. Fetching from git_url...`);
+      // Scarica il blob tramite l'endpoint git (funziona anche sui repo privati)
+      const blobResp = await fetch(js.git_url, { headers: ghHeaders });
+      if (!blobResp.ok) {
+        console.error(`[fetchPrivateFile] Error fetching from git_url for ${path}: ${blobResp.status} ${blobResp.statusText}`);
+        return 'https://via.placeholder.com/180x100?text=GitError';
+      }
+      const blobJson = await blobResp.json();           // { content: "base64...", encoding:"base64" }
+      rawBase64Content = blobJson.content.replace(/\s/g, '');
+      console.log(`[fetchPrivateFile] Fetched full Base64 content from git_url. Length: ${rawBase64Content.length}`);
+    }
+
+    const cleanBase64 = rawBase64Content.replace(/\s/g, '');
+    console.log(`[fetchPrivateFile] Cleaned Base64 content length for ${path}: ${cleanBase64.length}`);
+    // Log a snippet of the cleaned Base64 to check for obvious issues
+    console.log(`[fetchPrivateFile] Cleaned Base64 snippet for ${path}: ${cleanBase64.substring(0, 50)}...`);
+
+    let bin;
+    try {
+      bin = atob(cleanBase64);    // Base64 → binary string
+      console.log(`[fetchPrivateFile] atob binary string length for ${path}: ${bin.length}`);
+      if (bin.length === 0) {
+        console.warn(`[fetchPrivateFile] atob resulted in empty binary string for ${path}. Content might be invalid.`);
+      }
+    } catch (atobError) {
+      console.error(`[fetchPrivateFile] Base64 decode error for ${path}:`, atobError);
+      return 'https://via.placeholder.com/180x100?text=DecodeError'; // Indicate decoding failure
+    }
+
+    // Optimized Uint8Array conversion
+    const bytes = new Uint8Array(bin.length);
+    for (let i = 0; i < bin.length; i++) {
+      bytes[i] = bin.charCodeAt(i);
+    }
+    console.log(`[fetchPrivateFile] Uint8Array length for ${path}: ${bytes.length}`);
+    if (bytes.length === 0) {
+      console.warn(`[fetchPrivateFile] Uint8Array is empty for ${path}. Data might be corrupted or empty.`);
+    }
+
+    // Improved MIME type detection
+    let mimeType = 'application/octet-stream';
+    const pathLower = path.toLowerCase();
+
+    if (pathLower.endsWith('.jpg') || pathLower.endsWith('.jpeg')) {
+      mimeType = 'image/jpeg';
+    } else if (pathLower.endsWith('.png')) {
+      mimeType = 'image/png';
+    } else if (pathLower.endsWith('.gif')) {
+      mimeType = 'image/gif';
+    } else if (pathLower.endsWith('.webp')) {
+      mimeType = 'image/webp';
+    } else if (pathLower.endsWith('.glb')) {
+      mimeType = 'model/gltf-binary';
+    }
+    console.log(`[fetchPrivateFile] Inferred MIME type for ${path}: ${mimeType}`);
+
+    const blob  = new Blob([bytes], { type: mimeType });
+    console.log(`[fetchPrivateFile] Created Blob object for ${path}. Size: ${blob.size}, Type: ${blob.type}`);
+    if (blob.size === 0) {
+      console.warn(`[fetchPrivateFile] Blob created with 0 size for ${path}. This might cause blob:null/`);
+    }
+
+    const blobUrl = URL.createObjectURL(blob);
+    console.log(`[fetchPrivateFile] Generated Blob URL for ${path}: ${blobUrl}`);
+    return blobUrl;
+  } catch (e) {
+    console.error(`[fetchPrivateFile] Critical error processing ${path}:`, e);
+    return 'https://via.placeholder.com/180x100?text=Error'; // Fallback for critical errors
+  } finally {
+    hideLoading();
+  }
+}
+
+/* Nuova funzione per ottenere l'URL per la visualizzazione (blob:URL per privati, raw URL per pubblici) */
+async function getDisplayUrlForFile(filePathOrRawUrl) {
+  if (!filePathOrRawUrl || filePathOrRawUrl.startsWith('https://via.placeholder.com')) {
+    return filePathOrRawUrl; // Already a placeholder or empty
+  }
+
+  // Se è già un URL raw di GitHub, estrai il percorso relativo e usa fetchPrivateFile
+  if (filePathOrRawUrl.startsWith(GH_RAW_BASE_URL)) {
+    const relativePath = filePathOrRawUrl.substring(GH_RAW_BASE_URL.length);
+    return fetchPrivateFile(relativePath); // fetchPrivateFile restituisce un blob:URL
+  }
+  
+  // Se è un vecchio percorso relativo (es. "Clients/..."), usa fetchPrivateFile
+  // Questo dovrebbe essere gestito durante il caricamento, ma è un fallback
+  return fetchPrivateFile(filePathOrRawUrl); // fetchPrivateFile restituisce un blob:URL
+}
+
+/* Helper per estrarre il percorso relativo da un URL raw di GitHub */
+function extractRelativePathFromRawUrl(rawUrl) {
+  if (rawUrl && rawUrl.startsWith(GH_RAW_BASE_URL)) {
+    return rawUrl.substring(GH_RAW_BASE_URL.length);
+  }
+  return rawUrl; // Se non è un URL raw, restituisci così com'è (potrebbe essere un percorso relativo o altro)
+}
+
+/* ---------- NUOVE FUNZIONI DI CARICAMENTO DATI ---------- */
+
+// Helper per convertire base64 stringa in Blob
+function base64ToBlob(base64, mimeType) {
+  console.log(`[base64ToBlob] Input Base64 length: ${base64.length}`);
+  const byteCharacters = atob(base64);
+  console.log(`[base64ToBlob] atob byteCharacters length: ${byteCharacters.length}`);
+  const byteNumbers = new Array(byteCharacters.length);
+  for (let i = 0; i < byteCharacters.length; i++) {
+    byteNumbers[i] = byteCharacters.charCodeAt(i);
+  }
+  const byteArray = new Uint8Array(byteNumbers);
+  console.log(`[base64ToBlob] Final byteArray length: ${byteArray.length}`);
+  return new Blob([byteArray], { type: mimeType });
+}
+
+// Helper per convertire Blob in File
+function blobToFile(blob, filename, mimeType) {
+  return new File([blob], filename, { type: mimeType });
+}
+
+// Helper per convertire File in base64 stringa
+function fileToBase64(file){
+  return new Promise((resolve, reject)=>{
+    const reader=new FileReader();
+    reader.onload=()=>{
+      const base64String = reader.result.split(",")[1];
+      resolve(base64String);
+    };
+    reader.onerror=reject;
+    reader.readAsDataURL(file);
+  });
+}
+
+// Helper per sanificare i nomi per i percorsi delle cartelle
+// NON converte in minuscolo per mantenere la case-sensitivity di GitHub
+function sanitizeFilename(name){
+  if(!name) return "";
+  // Sostituisce i caratteri non validi per i nomi di file/cartelle con underscore
+  // Mantiene la maiuscola/minuscola originale
+  return name.replace(/[^a-zA-Z0-9_\-.]/g,"_");
+}
+
+// Funzione per assicurarsi che una cartella esista su GitHub (NON crea .gitkeep)
+async function ensureFolderExists(path) {
+  // GitHub crea automaticamente le cartelle quando il primo file viene caricato al loro interno.
+  // Questa funzione non ha più bisogno di creare un .gitkeep.
+  // Può essere lasciata come no-op o rimossa se non ci sono altri usi.
+  // Per ora, la lasciamo come funzione vuota.
+}
+
+// helper: elimina file (ignora 404)
+async function deleteFileFromGitHub(path, msg = 'Delete file') {
+  showLoading();
+  try {
+    // Se il path è un URL raw, estrai il percorso relativo
+    const relativePath = extractRelativePathFromRawUrl(path);
+    const url = `${GH_BASE_API_URL}${relativePath}`;
+    const meta = await fetch(url, { headers: ghHeaders });
+
+    if (meta.status === 404) return;          // non c'è nulla da togliere
+    if (!meta.ok)  throw new Error(`${meta.status} ${meta.statusText}`);
+
+    const { sha } = await meta.json();
+    const body = {
+      message : msg,
+      sha,
+      committer: { name:'Dashboard-Bot', email:'bot@example.com' }
+    };
+    const del = await fetch(url, {
+      method : 'DELETE',
+      headers: ghHeaders,
+      body   : JSON.stringify(body)
+    });
+
+    if (!del.ok && del.status !== 404) {
+      const err = await del.json();
+      throw new Error(`DELETE ${path} → ${del.status} ${err.message}`);
+    }
+    console.log('🗑️  rimosso', path);
+  } finally {
+    hideLoading();
+  }
+}
+
+// Definizione di uploadSingleFileToGitHub
+async function uploadSingleFileToGitHub(file, path, commitMsg) {
+  console.log(`[uploadSingleFileToGitHub] Uploading file: ${file.name} to ${path}`);
+  console.log(`[uploadSingleFileToGitHub] File size: ${file.size} bytes`);
+  showLoading();
+  try {
+    const url = `${GH_BASE_API_URL}${path}`;
+    let existingSha = null;
+
+    // Controlla se il file esiste già per ottenere lo SHA
+    try {
+      const getResp = await fetch(url, {
+        method: "GET",
+        headers: ghHeaders
+      });
+      if (getResp.ok) {
+        const info = await getResp.json();
+        existingSha = info.sha;
+      } else if (getResp.status === 404) {
+        console.log(`File non trovato (nuovo file?): ${path}`);
+      } else {
+        const errorText = await getResp.text();
+        console.error(`Errore GET SHA per ${path}: ${getResp.status} - ${errorText}`);
+        throw new Error(`Errore GET SHA per ${path}: ${getResp.status} - ${errorText}`);
+      }
+    } catch(e) {
+      console.error(`Errore durante il recupero SHA per ${path}:`, e);
+      // Non rilanciare, permetti il tentativo di PUT come nuovo file
+    }
+
+    // Leggi il file e convertilo in base64
+    const base64Data = await fileToBase64(file);
+    console.log(`[uploadSingleFileToGitHub] Base64 data length: ${base64Data.length}`);
+
+    // Esegui la richiesta PUT
+    const body = {
+      message: commitMsg || `Upload ${file.name}`,
+      content: base64Data
+    };
+    if (existingSha) body.sha = existingSha;
+
+    try {
+      const putResp = await fetch(url, {
+        method: "PUT",
+        headers: ghHeaders,
+        body: JSON.stringify(body)
+      });
+      if (!putResp.ok) {
+        const err = await putResp.json();
+        throw new Error(`Errore PUT per ${path}: ${putResp.status} => ${err.message}`);
+      }
+      console.log(`File ${path} caricato con successo.`);
+    } catch (e) {
+      console.error(`Errore caricamento file ${path}:`, e);
+      throw e;
+    }
+
+    // Restituisce l'URL raw del file su GitHub
+    return `${GH_RAW_BASE_URL}${path}`;
+  } finally {
+    hideLoading();
+  }
+}
+
+/* ---------- NUOVE FUNZIONI DI CARICAMENTO DATI ---------- */
+
+// Helper per convertire un percorso relativo in un URL raw di GitHub
+function convertToRawGitHubUrl(relativePath) {
+  if (!relativePath || relativePath.startsWith('http')) {
+    return relativePath; // È già un URL o è vuoto
+  }
+  return `${GH_RAW_BASE_URL}${relativePath}`;
+}
+
+// 2-a First dropdown – just customers
+async function loadClients() {
+  showLoading();
+  try {
+    const r = await fetch(`${GH_BASE_API_URL}${GH_CLIENTS_PATH}`, {headers: ghHeaders});
+    if (!r.ok) {
+      if (r.status === 404) {
+        console.warn('⚠️ Clients.json non trovato (prima esecuzione?)');
+        Object.keys(clients).forEach(key => delete clients[key]); // Clear existing clients
+      } else {
+        throw new Error(`Errore nel recupero di Clients.json: ${r.status} ${r.statusText}`);
+      }
+    } else {
+      const {content} = await r.json();
+      Object.keys(clients).forEach(key => delete clients[key]); // Clear existing clients
+      Object.assign(clients, JSON.parse(atob(content)));   // {"ACME":true,"Ikea":true}
+    }
+    refreshClientSelect();
+    console.info('📥 Lista clienti caricata da GitHub');
+  } catch (e) {
+    console.error('❌ Errore caricamento lista clienti', e);
+  } finally {
+    hideLoading();
+  }
+}
+
+// 2-b Second dropdown – models for one customer
+async function loadModelsFor(client) {
+  showLoading();
+  try {
+    const path = GH_CLIENT_MODELS_PATH(client);
+    const r    = await fetch(`${GH_BASE_API_URL}${path}`, {headers: ghHeaders});
+    if (!r.ok) {
+      if (r.status === 404) {
+        console.warn(`⚠️ Catalogo modelli per ${client} non trovato.`);
+        clients[client] = []; // Inizializza come array vuoto
+      } else {
+        throw new Error(`Errore nel recupero del catalogo modelli per ${client}: ${r.status} ${r.statusText}`);
+      }
+    } else {
+      const rawModels = JSON.parse(atob((await r.json()).content));
+      // Map old Italian names to new English names for catalog.json
+      clients[client] = rawModels.map(m => ({
+        name: m.nome || m.name, // Prefer new name, fallback to old
+        cover: convertToRawGitHubUrl(m.cover), // Converti a raw URL
+        collection: m.collezione || m.collection,
+        structure: m.struttura || m.structure,
+        versionsCount: m.versioniCount || m.versionsCount // Prefer new name, fallback to old
+      }));
+    }
+    renderModelsTable();
+    console.info(`📥 Modelli per ${client} caricati da GitHub`);
+  } catch (e) {
+    console.error(`❌ Errore caricamento modelli per ${client}`, e);
+  } finally {
+    hideLoading();
+  }
+}
+
+// 2-c Form – full detail for one model
+async function loadModelDetail(client, modelName) {
+  showLoading();
+  try {
+    const path = GH_SINGLE_MODEL_PATH(client, modelName);
+    const r    = await fetch(`${GH_BASE_API_URL}${path}`, {headers: ghHeaders});
+    if (!r.ok) throw new Error(`model.json per ${modelName} mancante: ${r.status} ${r.statusText}`);
+    
+    const modelData = JSON.parse(atob((await r.json()).content));
+    
+    // Convert GLB paths in versions to raw URLs and ensure 'type' is present
+    if (modelData.versions) {
+      modelData.versions = modelData.versions.map(v => ({
+        ...v,
+        glb: convertToRawGitHubUrl(v.glb),
+        type: v.type || '', // Ensure type is present, default to empty string
+        seatNumbers: v.seatNumbers || null, // Ensure seatNumbers is present
+        Arm: v.Arm || '', // Ensure Arm is present
+        // NEW: Convert new image paths to raw URLs
+        thumbnail: convertToRawGitHubUrl(v.thumbnail),
+        AlbedoDetail: convertToRawGitHubUrl(v.AlbedoDetail),
+        NormalDetail: convertToRawGitHubUrl(v.NormalDetail),
+        OcclusionDetail: convertToRawGitHubUrl(v.OcclusionDetail),
+      }));
+    }
+
+    // model.json ora contiene solo le versioni
+    return { versions: modelData.versions || [] };
+  } catch (e) {
+    console.error(`❌ Errore caricamento dettaglio modello ${modelName}`, e);
+    throw e;
+  } finally {
+    hideLoading();
+  }
+}
+
+/* ---------- NUOVE FUNZIONI DI SALVATAGGIO DATI ---------- */
+
+async function putJson(path, data, commitMsg) {
+  showLoading();
+  try {
+    const url = `${GH_BASE_API_URL}${path}`;
+    let existingSha = null;
+
+    try {
+      const getResp = await fetch(url, { method: "GET", headers: ghHeaders });
+      if (getResp.ok) {
+        const info = await getResp.json();
+        existingSha = info.sha;
+      } else if (getResp.status !== 404) {
+        const errorText = await getResp.text();
+        console.error(`Errore GET SHA per ${path}: ${getResp.status} - ${errorText}`);
+        throw new Error(`Errore GET SHA per ${path}: ${getResp.status} - ${errorText}`);
+      }
+    } catch(e) {
+      console.error(`Errore durante il recupero SHA per ${path}:`, e);
+    }
+
+    const content = btoa(JSON.stringify(data, null, 2));
+    const body = {
+      message: commitMsg,
+      content: content,
+      committer: { name: 'Sofa-Bot', email: 'bot@example.com' }
+    };
+    if (existingSha) body.sha = existingSha;
+
+    try {
+      const putResp = await fetch(url, {
+        method: "PUT",
+        headers: ghHeaders,
+        body: JSON.stringify(body)
+      });
+      if (!putResp.ok) {
+        const err = await putResp.json();
+        throw new Error(`Errore PUT per ${path}: ${putResp.status} => ${err.message}`);
+      }
+      console.log(`JSON ${path} caricato con successo.`);
+      return putResp.json();
+    } catch (e) {
+      console.error(`Errore caricamento JSON ${path}:`, e);
+      throw e;
+    }
+  } finally {
+    hideLoading();
+  }
+}
+
+/* 3-a save the flat clients list */
+async function saveClientsList() {
+  const names = Object.keys(clients).reduce((o,n)=>(o[n]=true,o),{});
+  await putJson(GH_CLIENTS_PATH, names, 'Update Customers list');
+}
+
+/* 3-b save the model list of ONE client */
+async function saveClientCatalog(client) {
+  // Mappa gli oggetti modello completi (che sono in clients[client])
+  // in un formato riassuntivo per catalog.json con nomenclatura inglese
+  const arr = clients[client].map(m => ({
+    name: m.name,
+    cover: m.cover, // Ora è già un URL raw
+    collection: m.collection,
+    structure: m.structure,
+    versionsCount: m.versionsCount
+  }));
+  await putJson(GH_CLIENT_MODELS_PATH(client), arr,
+                `Update catalog of ${client}`);
+}
+
+/* 3-c save ONE model detail */
+async function saveSingleModel(client, model) {
+  // Crea una copia del modello per evitare di modificare l'originale durante la destrutturazione
+  const modelToSave = { ...model };
+  const {name, versions} = modelToSave; // Destruttura solo 'name' e 'versions'
+  
+  // Il model.json conterrà solo l'array delle versioni
+  const finalModelData = {
+    versions: versions,
+  };
+
+  // Assicurati che glbDataUrl non sia presente nelle versioni prima di salvare
+  if (finalModelData.versions) {
+    finalModelData.versions.forEach(version => {
+      delete version.glbDataUrl;
+      // NEW: Delete temporary data URLs for version images
+      delete version.thumbnailDataUrl;
+      delete version.AlbedoDetailDataUrl;
+      delete version.NormalDetailDataUrl;
+      delete version.OcclusionDetailDataUrl;
+    });
+  }
+
+  const path = GH_SINGLE_MODEL_PATH(client, name); // Usa 'name' per il percorso del file
+  console.log(`Tentativo di salvare model.json per ${name} in: ${path}`);
+  await putJson(path, finalModelData,
+                `Update model ${name} of ${client}`);
+}
+
+/* ---------- ELEMENTI DOM ---------- */
+const clientsSection = document.getElementById('clientsSection');
+const clientSelect  = document.getElementById('clientSelect');
+const addClientBtn  = document.getElementById('addClientBtn');
+const deleteClientBtn = document.getElementById('deleteClientBtn');
+
+const modelsSection = document.getElementById('modelsSection');
+const modelsHeader  = document.getElementById('modelsHeader');
+const addModelBtn   = document.getElementById('addModelBtn');
+const modelsTbody   = document.getElementById('modelsTbody');
+
+const modelForm     = document.getElementById('modelFormWrapper');
+const formTitle     = document.getElementById('formTitle');
+const saveModelBtn  = document.getElementById('saveModelBtn');
+const cancelBtn     = document.getElementById('cancelBtn');
+
+const coverInput    = document.getElementById('coverInput');
+const coverPrev     = document.getElementById('coverPreview');
+const nameInput     = document.getElementById('nameInput'); // Renamed
+const collectionInput = document.getElementById('collectionInput'); // Renamed
+const structureInput= document.getElementById('structureInput'); // Renamed
+
+/* pezzi */
+let pieceEditIdx = null; // Definizione di pieceEditIdx
+const addPieceBtn   = document.getElementById('addPieceBtn');
+const piecesTbody   = document.getElementById('piecesTbody');
+
+const pieceForm     = document.getElementById('pieceForm');
+const pieceFormTitle= document.getElementById('pieceFormTitle');
+const pieceNameInput= document.getElementById('pieceNameInput');
+const pieceTypeInput= document.getElementById('pieceTypeInput'); // Nuovo elemento DOM
+const seatNumbersInput = document.getElementById('seatNumbersInput'); // Nuovo elemento DOM
+const armInput      = document.getElementById('armInput'); // Nuovo elemento DOM
+const glbInput      = document.getElementById('glbInput');
+const savePieceBtn  = document.getElementById('savePieceBtn');
+const cancelPieceBtn= document.getElementById('cancelPieceBtn');
+
+// Nuovi elementi DOM per le immagini delle versioni
+const thumbnailPieceInput = document.getElementById('thumbnailPieceInput'); // NEW
+const thumbnailPiecePreview = document.getElementById('thumbnailPiecePreview'); // NEW
+const albedoDetailInput = document.getElementById('albedoDetailInput'); // NEW
+const albedoDetailPreview = document.getElementById('albedoDetailPreview'); // NEW
+const normalDetailInput = document.getElementById('normalDetailInput'); // NEW
+const normalDetailPreview = document.getElementById('normalDetailPreview'); // NEW
+const occlusionDetailInput = document.getElementById('occlusionDetailInput'); // NEW
+const occlusionDetailPreview = document.getElementById('occlusionDetailPreview'); // NEW
+
+
+/* Nuovi elementi DOM per le Textures */
+const texturesSection = document.getElementById('texturesSection');
+const addTextureBtn = document.getElementById('addTextureBtn');
+const texturesTbody = document.getElementById('texturesTbody');
+const textureFormWrapper = document.getElementById('textureFormWrapper');
+const textureFormTitle = document.getElementById('textureFormTitle');
+const textureTypeInput = document.getElementById('textureTypeInput');
+const textureNameInput = document.getElementById('textureNameInput');
+const albedoInput = document.getElementById('albedoInput');
+const albedoPreview = document.getElementById('albedoPreview');
+const maskInput = document.getElementById('maskInput');
+const maskPreview = document.getElementById('maskInput');
+const normalInput = document.getElementById('normalInput');
+const normalPreview = document.getElementById('normalPreview');
+const rimNoiseInput = document.getElementById('rimNoiseInput');
+const rimNoisePreview = document.getElementById('rimNoisePreview');
+const saveTextureBtn = document.getElementById('saveTextureBtn');
+const cancelTextureBtn = document.getElementById('cancelTextureBtn');
+
+/* Nuovi elementi DOM per i Colori */
+const colorsSection = document.getElementById('colorsSection');
+const addColorBtn = document.getElementById('addColorBtn');
+const colorsTbody = document.getElementById('colorsTbody');
+const colorFormWrapper = document.getElementById('colorFormWrapper');
+const colorFormTitle = document.getElementById('colorFormTitle');
+const colorTypeInput = document.getElementById('colorTypeInput');
+const colorCollectionInput = document.getElementById('colorCollectionInput');
+const saveColorBtn = document.getElementById('saveColorBtn');
+const cancelColorBtn = document.getElementById('cancelColorBtn');
+
+const showModelsBtn = document.getElementById('showModelsBtn');
+const showTexturesBtn = document.getElementById('showTexturesBtn');
+const showColorsBtn = document.getElementById('showColorsBtn');
+
+/* Nuove variabili per le Textures */
+let textures = [];
+let editingTextureIndex = null;
+let currentEditingTexture = null;
+let currentAlbedoDataUrl = null;
+let currentMaskDataUrl = null;
+let currentNormalDataUrl = null;
+let currentRimNoiseDataUrl = null;
+let currentThumbnailDataUrl = null; // NEW
+
+/* Nuove variabili per i Colori */
+let colors = [];
+let editingColorIndex = null;
+let currentEditingColor = null;
+
+/* ---------- UTILS ---------- */
+
+// Funzione per aggiornare lo stato del pulsante "Salva" del modello
+function updateSaveButtonState() {
+  const isNameValid = nameInput.value.trim() !== '';
+  const isCoverValid = (currentModelCoverDataUrl !== null && currentModelCoverDataUrl !== '');
+
+  // Se stiamo modificando un modello esistente e non è stata selezionata una nuova cover,
+  // consideriamo valida la cover esistente (che ora sarà un URL raw).
+  const hasExistingCover = editingIndex !== null && currentEditingModel && currentEditingModel.cover;
+
+  saveModelBtn.disabled = !(isNameValid && (isCoverValid || hasExistingCover));
+}
+
+const resetForm = () => {
+  // Revoca l'URL dell'oggetto precedente per l'immagine di copertina se era un URL.createObjectURL
+  if (coverPrev.src && !coverPrev.src.startsWith('https://via.placeholder.com') && coverPrev.src.startsWith('blob:')) {
+    URL.revokeObjectURL(coverPrev.src);
+  }
+  coverPrev.src = 'https://via.placeholder.com/180x100?text=Cover';
+  coverInput.value = '';
+  nameInput.value  = ''; // Renamed
+  collectionInput.value  = ''; // Renamed
+  structureInput.value = ''; // Renamed
+  piecesCurrent = [];
+  renderPiecesTable();
+  pieceForm.classList.add('hidden');
+  currentModelCoverDataUrl = null; // Pulisci i dati Base64 temporanei
+  currentEditingModel = null; // Resetta il modello in modifica
+  updateSaveButtonState(); // Aggiorna lo stato del pulsante dopo il reset
+};
+
+const refreshClientSelect = () => {
+  clientSelect.innerHTML =
+    '<option value="" disabled selected>Seleziona cliente…</option>';
+  // clients ora contiene solo i nomi dei clienti come chiavi
+  Object.keys(clients).forEach(c => {
+    const opt = document.createElement('option');
+    opt.value = c;
+    opt.textContent = c;
+    if (c === currentClient) opt.selected = true;
+    clientSelect.appendChild(opt);
+  });
+  // Mostra/nascondi il pulsante di eliminazione cliente
+  if (currentClient && clients[currentClient]) { // clients[currentClient] sarà un array di modelli dopo loadModelsFor
+    deleteClientBtn.classList.remove('hidden');
+  } else {
+    deleteClientBtn.classList.add('hidden');
+  }
+};
+
+// Adatta il rendering della tabella
+async function renderModelsTable() {
+  modelsTbody.innerHTML = '';
+  if (!currentClient || !clients[currentClient]) return; // Assicurati che i modelli siano stati caricati
+
+  for (const [i, m] of clients[currentClient].entries()) {
+    const imgSrc = await getDisplayUrlForFile(m.cover);   // ⬅️ usa la nuova funzione per la visualizzazione
+
+    const tr = document.createElement('tr');
+    tr.innerHTML = `
+      <td class="px-4 py-2">
+        <img src="${imgSrc}" class="w-20 h-12 object-cover rounded"
+           alt="Cover per ${m.name}" />
+      </td>
+      <td class="px-4 py-2">${m.name}</td>
+      <td class="px-4 py-2">${m.collection || ''}</td>
+      <td class="px-4 py-2">${m.structure || ''}</td>
+      <td class="px-4 py-2">${m.versionsCount ?? 0}</td> <!-- Usa versionsCount -->
+      <td class="px-4 py-2 flex gap-2">
+        <button data-edit="${i}"
+          class="px-2 py-0.5 text-xs rounded bg-yellow-500 text-white hover:bg-yellow-600">
+          Modifica
+        </button>
+        <button data-remove="${i}"
+          class="px-2 py-0.5 text-xs rounded bg-red-600 text-white hover:bg-red-700">
+          Rimuovi
+        </button>
+      </td>`;
+    modelsTbody.appendChild(tr);
+  }
+}
+
+const renderPiecesTable = async () => { // Made async to await image previews
+  piecesTbody.innerHTML = '';
+  for (const [i, p] of piecesCurrent.entries()) {
+    // NEW: Paths for version images are now directly in the versions folder
+    const thumbnailSrc = await getDisplayUrlForFile(p.thumbnail || 'https://via.placeholder.com/50x50?text=Thumb');
+    const albedoDetailSrc = await getDisplayUrlForFile(p.AlbedoDetail || 'https://via.placeholder.com/50x50?text=AlbedoD');
+    const normalDetailSrc = await getDisplayUrlForFile(p.NormalDetail || 'https://via.placeholder.com/50x50?text=NormalD');
+    const occlusionDetailSrc = await getDisplayUrlForFile(p.OcclusionDetail || 'https://via.placeholder.com/50x50?text=OcclusionD');
+
+    const tr = document.createElement('tr');
+    tr.innerHTML = `
+      <td class="px-4 py-2">${p.name}</td>
+      <td class="px-4 py-2">${p.type || ''}</td>
+      <td class="px-4 py-2">${p.seatNumbers || ''}</td>
+      <td class="px-4 py-2">${p.Arm || ''}</td>
+      <td class="px-4 py-2">
+        <a href="${p.glb}" target="_blank" class="text-blue-500 hover:underline">${p.glbName}</a>
+      </td>
+      <td class="px-4 py-2">
+        <img src="${thumbnailSrc}" class="w-12 h-12 object-cover rounded" alt="Thumbnail" />
+      </td>
+      <td class="px-4 py-2">
+        <img src="${albedoDetailSrc}" class="w-12 h-12 object-cover rounded" alt="Albedo Detail" />
+      </td>
+      <td class="px-4 py-2">
+        <img src="${normalDetailSrc}" class="w-12 h-12 object-cover rounded" alt="Normal Detail" onerror="this.onerror=null;this.src='https://via.placeholder.com/50x50?text=Error';" />
+      </td>
+      <td class="px-4 py-2">
+        <img src="${occlusionDetailSrc}" class="w-12 h-12 object-cover rounded" alt="Occlusion Detail" />
+      </td>
+      <td class="px-4 py-2 flex gap-2">
+        <button data-pedit="${i}"
+          class="px-2 py-0.5 rounded text-xs bg-yellow-500 text-white hover:bg-yellow-600">
+          Modifica
+        </button>
+        <button data-premove="${i}"
+          class="px-2 py-0.5 rounded text-xs bg-red-600 text-white hover:bg-red-700">
+          Rimuovi
+        </button>
+      </td>`;
+    piecesTbody.appendChild(tr);
+  }
+};
+
+// Helper to get file extension
+function getFileExtension(filename) {
+  return filename.split('.').pop().toLowerCase();
+}
+
+// Helper for file input change and preview (reused for textures and versions)
+function handleFileInputAndPreview(inputElement, previewElement, dataUrlVarSetter, isNormalMap = false) {
+  return (e) => {
+    const f = e.target.files[0];
+    if (f) {
+      if (isNormalMap && f.type === 'image/png') {
+        // Special handling for normal.png conversion (DX5NM)
+        const reader = new FileReader();
+        reader.onload = function(event) {
+          const img = new Image();
+          img.crossOrigin = "anonymous"; // Important for canvas operations
+          img.onload = function() {
+            const canvas = document.createElement('canvas');
+            canvas.width = img.width;
+            canvas.height = img.height;
+            const ctx = canvas.getContext('2d');
+            ctx.drawImage(img, 0, 0);
+
+            const imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
+            const data = imageData.data;
+
+            // DX5NM conversion: RGBA = (255, G, 255, R)
+            for (let i = 0; i < data.length; i += 4) {
+              const r = data[i];
+              const g = data[i + 1];
+              data[i] = 255;        // R (red channel becomes 255)
+              data[i + 1] = g;      // G (green channel remains G)
+              data[i + 2] = 255;    // B (blue channel becomes 255)
+              data[i + 3] = r;      // A (alpha channel becomes R)
+            }
+
+            ctx.putImageData(imageData, 0, 0);
+
+            canvas.toBlob(function(blob) {
+              const convertedReader = new FileReader();
+              convertedReader.onload = function(convertedEvent) {
+                if (previewElement.src && !previewElement.src.startsWith('https://via.placeholder.com') && previewElement.src.startsWith('blob:')) {
+                  URL.revokeObjectURL(previewElement.src);
+                }
+                previewElement.src = convertedEvent.target.result;
+                dataUrlVarSetter(convertedEvent.target.result); // Set the data URL for upload
+                console.log(`[DX5NM Conversion] Normal map converted and preview updated.`);
+              };
+              convertedReader.readAsDataURL(blob);
+            }, 'image/png'); // Ensure it's saved as PNG
+          };
+          img.src = event.target.result;
+        };
+        reader.readAsDataURL(f);
+      } else {
+        // Existing logic for other files or non-PNG normal files
+        const reader = new FileReader();
+        reader.onload = (event) => {
+          if (previewElement.src && !previewElement.src.startsWith('https://via.placeholder.com') && previewElement.src.startsWith('blob:')) {
+            URL.revokeObjectURL(previewElement.src);
+          }
+          previewElement.src = event.target.result;
+          dataUrlVarSetter(event.target.result); // Set the corresponding data URL variable
+        };
+        reader.readAsDataURL(f);
+      }
+    } else {
+      previewElement.src = `https://via.placeholder.com/100x100?text=${previewElement.alt.replace('Anteprima ', '')}`;
+      dataUrlVarSetter(null); // Clear the data URL variable
+    }
+  };
+}
+
+
+// Load textures from GitHub
+async function loadTextures() {
+  showLoading();
+  try {
+    const r = await fetch(`${GH_BASE_API_URL}${GH_TEXTURES_CATALOG_PATH}`, { headers: ghHeaders });
+    if (!r.ok) {
+      if (r.status === 404) {
+        console.warn('⚠️ textures_catalog.json non trovato (prima esecuzione?)');
+        textures = [];
+      } else {
+        throw new Error(`Errore nel recupero di textures_catalog.json: ${r.status} ${r.statusText}`);
+      }
+    } else {
+      textures = JSON.parse(atob((await r.json()).content));
+    }
+    renderTexturesTable();
+    console.info('📥 Lista textures caricata da GitHub');
+  } catch (e) {
+    console.error('❌ Errore caricamento lista textures', e);
+  } finally {
+    hideLoading();
+  }
+}
+
+// Save textures catalog to GitHub
+async function saveTexturesCatalog() {
+  await putJson(GH_TEXTURES_CATALOG_PATH, textures, 'Update textures catalog');
+}
+
+// Render textures table
+async function renderTexturesTable() {
+  texturesTbody.innerHTML = '';
+  for (const [i, t] of textures.entries()) {
+    const tr = document.createElement('tr');
+    const albedoSrc = await getDisplayUrlForFile(t.albedo || 'https://via.placeholder.com/100x100?text=Albedo');
+    const maskSrc = await getDisplayUrlForFile(t.mask || 'https://via.placeholder.com/100x100?text=Mask');
+    const normalSrc = await getDisplayUrlForFile(t.normal || 'https://via.placeholder.com/100x100?text=Normal');
+    const rimNoiseSrc = await getDisplayUrlForFile(t.rimNoise || 'https://via.placeholder.com/100x100?text=RimNoise');
+    const thumbnailSrc = await getDisplayUrlForFile(t.thumbnail || 'https://via.placeholder.com/100x100?text=Thumbnail'); // NEW
+
+    console.log(`[renderTexturesTable] Texture: ${t.name}, Normal src: ${normalSrc}`); // Add this line
+
+    tr.innerHTML = `
+      <td class="px-4 py-2">${t.type || ''}</td>
+      <td class="px-4 py-2">${t.name}</td>
+      <td class="px-4 py-2">
+        <img src="${albedoSrc}" class="w-12 h-12 object-cover rounded" alt="Albedo" />
+      </td>
+      <td class="px-4 py-2">
+        <img src="${maskSrc}" class="w-12 h-12 object-cover rounded" alt="Mask" />
+      </td>
+      <td class="px-4 py-2">
+        <img src="${normalSrc}" class="w-12 h-12 object-cover rounded" alt="Normal" onerror="this.onerror=null;this.src='https://via.placeholder.com/100x100?text=Error';" />
+      </td>
+      <td class="px-4 py-2">
+        <img src="${rimNoiseSrc}" class="w-12 h-12 object-cover rounded" alt="RimNoise" />
+      </td>
+      <td class="px-4 py-2">
+        <img src="${thumbnailSrc}" class="w-12 h-12 object-cover rounded" alt="Thumbnail" />
+      </td>
+      <td class="px-4 py-2 flex gap-2">
+        <button data-tedit="${i}"
+          class="px-2 py-0.5 text-xs rounded bg-yellow-500 text-white hover:bg-yellow-600">
+          Modifica
+        </button>
+        <button data-tremove="${i}"
+          class="px-2 py-0.5 text-xs rounded bg-red-600 text-white hover:bg-red-700">
+          Rimuovi
+        </button>
+      </td>`;
+    texturesTbody.appendChild(tr);
+  }
+}
+
+// Reset texture form
+const resetTextureForm = () => {
+  textureTypeInput.value = '';
+  textureNameInput.value = '';
+  albedoInput.value = '';
+  albedoPreview.src = 'https://via.placeholder.com/100x100?text=Albedo';
+  maskInput.value = '';
+  maskPreview.src = 'https://via.placeholder.com/100x100?text=Mask';
+  normalInput.value = '';
+  normalPreview.src = 'https://via.placeholder.com/100x100?text=Normal';
+  rimNoiseInput.value = '';
+  rimNoisePreview.src = 'https://via.placeholder.com/100x100?text=RimNoise';
+  thumbnailInput.value = ''; // NEW
+  thumbnailPreview.src = 'https://via.placeholder.com/100x100?text=Thumbnail'; // NEW
+
+  currentAlbedoDataUrl = null;
+  currentMaskDataUrl = null;
+  currentNormalDataUrl = null;
+  currentRimNoiseDataUrl = null;
+  currentThumbnailDataUrl = null; // NEW
+  currentEditingTexture = null;
+  editingTextureIndex = null;
+};
+
+// Load colors from GitHub
+async function loadColors() {
+  try {
+    // Per semplicità, utilizziamo un esempio locale invece di caricare da GitHub
+    // In una implementazione reale, questo dovrebbe essere caricato da GitHub
+    colors = [
+      {
+        type: "Celeste",
+        collection: ["chiaro", "scuro", "medio"]
+      },
+      {
+        type: "Rosso",
+        collection: ["bordeaux", "carminio", "scarlatto", "porpora"]
+      },
+      {
+        type: "Verde",
+        collection: ["smeraldo", "oliva", "lime", "acquamarina"]
+      },
+      {
+        type: "Blu",
+        collection: ["navy", "cobalto", "indaco", "turchese"]
+      },
+      {
+        type: "Grigio",
+        collection: ["chiaro", "scuro", "antracite", "argento"]
+      }
+    ];
+    
+    renderColorsTable();
+    console.info('📥 Lista colori caricata');
+  } catch (e) {
+    console.error('❌ Errore caricamento lista colori', e);
+  }
+}
+
+// Save colors catalog to GitHub
+async function saveColorsCatalog() {
+  // Per semplicità, logghiamo solo i colori invece di salvarli su GitHub
+  console.log('Salvataggio colori:', colors);
+  // In una implementazione reale, questo dovrebbe salvare su GitHub:
+  // await putJson(GH_COLORS_CATALOG_PATH, colors, 'Update colors catalog');
+}
+
+// Render colors table
+function renderColorsTable() {
+  colorsTbody.innerHTML = '';
+  for (const [i, c] of colors.entries()) {
+    const tr = document.createElement('tr');
+    tr.innerHTML = `
+      <td class="px-4 py-2">${c.type}</td>
+      <td class="px-4 py-2">${c.collection.join(', ')}</td>
+      <td class="px-4 py-2 flex gap-2">
+        <button data-cedit="${i}"
+          class="px-2 py-0.5 text-xs rounded bg-yellow-500 text-white hover:bg-yellow-600">
+          Modifica
+        </button>
+        <button data-cremove="${i}"
+          class="px-2 py-0.5 text-xs rounded bg-red-600 text-white hover:bg-red-700">
+          Rimuovi
+        </button>
+      </td>`;
+    colorsTbody.appendChild(tr);
+  }
+}
+
+// Reset color form
+const resetColorForm = () => {
+  colorTypeInput.value = '';
+  colorCollectionInput.value = '';
+  currentEditingColor = null;
+  editingColorIndex = null;
+};
+
+// Toggle color form visibility
+function toggleColorForm(show) {
+  if (show) {
+    colorFormWrapper.classList.remove('hidden');
+  } else {
+    colorFormWrapper.classList.add('hidden');
+  }
+}
+
+/* ---------- HANDLERS ---------- */
+
+// Sezione toggling
+showModelsBtn.addEventListener('click', () => {
+  clientsSection.classList.remove('hidden');
+  modelsSection.classList.remove('hidden');
+  modelForm.classList.add('hidden'); // Hide model form when switching sections
+  texturesSection.classList.add('hidden');
+  colorsSection.classList.add('hidden');
+  textureFormWrapper.classList.add('hidden'); // Hide texture form when switching sections
+  colorFormWrapper.classList.add('hidden'); // Hide color form when switching sections
+});
+
+showTexturesBtn.addEventListener('click', () => {
+  clientsSection.classList.add('hidden');
+  modelsSection.classList.add('hidden');
+  modelForm.classList.add('hidden'); // Hide model form when switching sections
+  texturesSection.classList.remove('hidden');
+  colorsSection.classList.add('hidden');
+  colorFormWrapper.classList.add('hidden'); // Hide color form when switching sections
+  // No need to hide textureFormWrapper here, as addTextureBtn will show it
+});
+
+showColorsBtn.addEventListener('click', () => {
+  clientsSection.classList.remove('hidden');
+  modelsSection.classList.add('hidden');
+  modelForm.classList.add('hidden'); // Hide model form when switching sections
+  texturesSection.classList.add('hidden');
+  colorsSection.classList.remove('hidden');
+  textureFormWrapper.classList.add('hidden'); // Hide texture form when switching sections
+  loadColors();
+});
+
+// CLIENTI
+addClientBtn.addEventListener('click', async () => { // Made async
+  showLoading();
+  try {
+    const nome = prompt('Nome nuovo cliente?');
+    if (!nome) return;
+    if (clients[nome]) { alert('Cliente già presente.'); return; }
+    
+    // Inizializza con un array vuoto per i modelli (che saranno oggetti riassuntivi)
+    clients[nome] = []; 
+    currentClient = nome;
+    
+    await saveClientsList(); // Salva la lista clienti aggiornata
+    await saveClientCatalog(currentClient); // Crea il catalog.json vuoto per il nuovo cliente
+
+    refreshClientSelect();
+    modelsHeader.textContent = `Modelli di ${currentClient}`;
+    modelsSection.classList.remove('hidden');
+    modelForm.classList.add('hidden'); // Ensure model form is hidden when adding new client
+    renderModelsTable(); // Renderizza la tabella vuota
+    deleteClientBtn.classList.remove('hidden');
+  } finally {
+    hideLoading();
+  }
+});
+
+clientSelect.addEventListener('change', async () => { // Made async
+  showLoading();
+  try {
+    currentClient = clientSelect.value;
+    modelsHeader.textContent = `Modelli di ${currentClient}`;
+    modelsSection.classList.remove('hidden');
+    modelForm.classList.add('hidden');
+    await loadModelsFor(currentClient); // ⬅️ instead of renderModelsTable()
+    deleteClientBtn.classList.remove('hidden');
+  } finally {
+    hideLoading();
+  }
+});
+
+// Handler per l'eliminazione del cliente
+deleteClientBtn.addEventListener('click', async () => {
+  showLoading();
+  try {
+    if (!currentClient) return;
+
+    if (!confirm(`Sei sicuro di voler rimuovere il cliente "${currentClient}" e tutti i suoi modelli e file associati da GitHub? Questa azione è irreversibile!`)) {
+      return;
+    }
+
+    const sanitizedClientName = sanitizeFilename(currentClient);
+    const clientFolderPath = `Clients/${sanitizedClientName}`;
+
+    // Carica i modelli del cliente per poter eliminare i loro file
+    // Nota: qui carichiamo i modelli riassuntivi, ma per eliminare i GLB
+    // avremo bisogno dei dettagli completi di ogni modello.
+    await loadModelsFor(currentClient); // Popola clients[currentClient] con i riassunti
+    const modelsToDeleteSummaries = clients[currentClient]; // Copia i riassunti
+
+    // Per ogni modello riassuntivo, carica i dettagli completi per eliminare i GLB
+    for (const modelSummary of modelsToDeleteSummaries) {
+      let fullModelDetail;
+      try {
+        fullModelDetail = await loadModelDetail(currentClient, modelSummary.name); // Use modelSummary.name
+      } catch (error) {
+        console.warn(`Dettagli completi per il modello ${modelSummary.name} non trovati, procedo con l'eliminazione dei file noti.`);
+        fullModelDetail = { versions: [] }; // Inizializza per evitare errori
+      }
+
+      // Elimina la cover
+      if (modelSummary.cover) { // Usa modelSummary.cover (che ora è un URL raw)
+        await deleteFileFromGitHub(modelSummary.cover, `Delete cover for model ${modelSummary.name} of client ${currentClient}`);
+      }
+      // Elimina i file GLB per tutte le versioni
+      for (const version of fullModelDetail.versions ?? []) {
+        if (version.glb) { // Usa version.glb (che ora è un URL raw)
+          await deleteFileFromGitHub(version.glb, `Delete GLB ${version.glbName} for model ${modelSummary.name} of client ${currentClient}`);
+        }
+        // NEW: Delete version images (paths adjusted)
+        if (version.thumbnail) await deleteFileFromGitHub(version.thumbnail, `Delete Thumbnail for version ${version.name}`);
+        if (version.AlbedoDetail) await deleteFileFromGitHub(version.AlbedoDetail, `Delete AlbedoDetail for version ${version.name}`);
+        if (version.NormalDetail) await deleteFileFromGitHub(version.NormalDetail, `Delete NormalDetail for version ${version.name}`);
+        if (version.OcclusionDetail) await deleteFileFromGitHub(version.OcclusionDetail, `Delete OcclusionDetail for version ${version.name}`);
+      }
+      // Elimina il file model.json del singolo modello
+      await deleteFileFromGitHub(GH_SINGLE_MODEL_PATH(currentClient, modelSummary.name), `Delete model.json for ${modelSummary.name}`);
+    }
+
+    // Elimina il catalog.json del cliente
+    await deleteFileFromGitHub(GH_CLIENT_MODELS_PATH(currentClient), `Delete catalog.json for client ${currentClient}`);
+
+    // Elimina il cliente dai dati locali
+    delete clients[currentClient];
+    currentClient = null; // Resetta il cliente corrente
+
+    // Aggiorna Clients.json su GitHub
+    await saveClientsList();
+
+    // Aggiorna l'interfaccia utente
+    refreshClientSelect();
+    modelsSection.classList.add('hidden'); // Nascondi la sezione modelli
+    modelForm.classList.add('hidden'); // Nascondi il form modello
+    deleteClientBtn.classList.add('hidden'); // Nascondi il pulsante elimina cliente
+    alert(`Cliente rimosso con successo da GitHub.`);
+
+  } catch (err) {
+    alert('Errore durante la rimozione del cliente e dei suoi file su GitHub:\n' + err.message);
+  } finally {
+    hideLoading();
+  }
+});
+
+// MODELLO: Nuovo
+addModelBtn.addEventListener('click', () => {
+  if (!currentClient) {
+    alert('Seleziona prima un cliente per aggiungere un modello.');
+    return;
+  }
+  editingIndex = null;
+  currentEditingModel = null; // Nessun modello in modifica per un nuovo modello
+  formTitle.textContent = 'Nuovo Modello';
+  resetForm(); // Questo chiama updateSaveButtonState()
+  modelForm.classList.remove('hidden');
+  window.scrollTo({ top: modelForm.offsetTop - 20, behavior: 'smooth' });
+});
+
+// MODELLO: Annulla
+cancelBtn.addEventListener('click', () => {
+  modelForm.classList.add('hidden');
+  resetForm(); // Questo chiama updateSaveButtonState()
+});
+
+// MODELLO: anteprima cover e lettura Base64
+coverInput.addEventListener('change', e => {
+  const f = e.target.files[0];
+  if (f) {
+    const reader = new FileReader();
+    reader.onload = (event) => {
+      // Revoca l'URL dell'oggetto precedente se era un URL.createObjectURL
+      if (coverPrev.src && !coverPrev.src.startsWith('https://via.placeholder.com') && coverPrev.src.startsWith('blob:')) {
+        URL.revokeObjectURL(coverPrev.src);
+      }
+      coverPrev.src = event.target.result; // Questo è il Data URL (Base64)
+      currentModelCoverDataUrl = event.target.result; // Memorizza per il caricamento
+      updateSaveButtonState(); // Aggiorna lo stato del pulsante
+    };
+    reader.readAsDataURL(f);
+  } else {
+    currentModelCoverDataUrl = null; // Se il file viene deselezionato
+    updateSaveButtonState(); // Aggiorna lo stato del pulsante
+  }
+});
+
+// MODELLO: Salva
+saveModelBtn.addEventListener('click', async () => { // Made async
+  showLoading();
+  try {
+    if (!currentClient) return;
+    
+    // Costruisci l'oggetto modello completo dai campi del form
+    const modelDataFromForm = {
+      cover      : currentModelCoverDataUrl ? '' : (currentEditingModel ? currentEditingModel.cover : ''),
+      coverDataUrl: currentModelCoverDataUrl,
+      name       : nameInput.value.trim(), // Renamed
+      collection : collectionInput.value.trim(), // Renamed
+      structure  : structureInput.value.trim(), // Renamed
+      versions   : piecesCurrent.map(p => ({ ...p })) // clone delle versioni correnti
+    };
+    if (!modelDataFromForm.name) { alert('Inserisci il nome del modello.'); return; } // Renamed
+
+    // Se è un nuovo modello, inizializza currentEditingModel con i dati del form
+    if (editingIndex === null) {
+      currentEditingModel = { ...modelDataFromForm };
+    } else {
+      // Se è un modello esistente, aggiorna currentEditingModel con i dati del form
+      Object.assign(currentEditingModel, modelDataFromForm);
+    }
+
+    // Gestisci l'upload della cover se presente
+    if (currentEditingModel.coverDataUrl) {
+      const mimeType = currentEditingModel.coverDataUrl.match(/data:(.*?);/)?.[1] || 'image/jpeg';
+      let extension = 'jpg';
+      if (mimeType.includes('png')) extension = 'png';
+      else if (mimeType.includes('gif')) extension = 'gif';
+      else if (mimeType.includes('webp')) extension = 'webp';
+      
+      const coverFilename = `CoverModel.${extension}`;
+      const clientModelPath = `Clients/${sanitizeFilename(currentClient)}/${sanitizeFilename(currentEditingModel.name)}`; // Use .name
+      const coverPath = `${clientModelPath}/${coverFilename}`;
+
+      const base64Content = currentEditingModel.coverDataUrl.split(',')[1];
+      const coverBlob = base64ToBlob(base64Content, mimeType);
+      const coverFile = blobToFile(coverBlob, coverFilename, mimeType);
+
+      // uploadSingleFileToGitHub ora restituisce l'URL raw
+      currentEditingModel.cover = await uploadSingleFileToGitHub(coverFile, coverPath, `Upload cover for ${currentEditingModel.name}`); // Aggiorna al percorso GitHub (URL raw)
+    }
+    // Rimuovi sempre coverDataUrl prima di salvare il modello
+    delete currentEditingModel.coverDataUrl;
+
+    // Gestisci i file GLB e le nuove immagini per le versioni
+    if (currentEditingModel.versions) {
+      const clientModelPath = `Clients/${sanitizeFilename(currentClient)}/${sanitizeFilename(currentEditingModel.name)}`; // Use .name
+      const versionsPath = `${clientModelPath}/Versions`;
+      for (const version of currentEditingModel.versions) {
+        // NEW: No subfolder for version images, they go directly into versionsPath
+        const versionFilesBase = `${versionsPath}/${sanitizeFilename(version.name)}`; 
+
+        // Upload GLB
+        if (version.glbDataUrl) {
+          const glbFilename = `${sanitizeFilename(version.name)}.glb`; 
+          const glbPath = `${versionFilesBase}/${glbFilename}`; // Path for GLB
+          const mimeType = 'model/gltf-binary'; 
+          const base64Content = version.glbDataUrl.split(',')[1];
+          const glbBlob = base64ToBlob(base64Content, mimeType);
+          const glbFile = blobToFile(glbBlob, glbFilename, mimeType); 
+
+          // uploadSingleFileToGitHub ora restituisce l'URL raw
+          version.glb = await uploadSingleFileToGitHub(glbFile, glbPath, `Upload GLB for ${version.name} of ${currentEditingModel.name}`);
+          version.glbName = glbFilename;
+          delete version.glbDataUrl;
+        }
+
+        // Upload Thumbnail (NEW)
+        if (version.thumbnailDataUrl) {
+          const ext = getFileExtension(thumbnailPieceInput.files[0].name);
+          const thumbnailFile = blobToFile(base64ToBlob(version.thumbnailDataUrl.split(',')[1], thumbnailPieceInput.files[0].type), `thumbnail.${ext}`, thumbnailPieceInput.files[0].type);
+          version.thumbnail = await uploadSingleFileToGitHub(thumbnailFile, `${versionFilesBase}/thumbnail.${ext}`, `Upload Thumbnail for version ${version.name}`);
+          delete version.thumbnailDataUrl;
+        }
+
+        // Upload AlbedoDetail (NEW)
+        if (version.AlbedoDetailDataUrl) {
+          const ext = getFileExtension(albedoDetailInput.files[0].name);
+          const albedoDetailFile = blobToFile(base64ToBlob(version.AlbedoDetailDataUrl.split(',')[1], albedoDetailInput.files[0].type), `albedoDetail.${ext}`, albedoDetailInput.files[0].type);
+          version.AlbedoDetail = await uploadSingleFileToGitHub(albedoDetailFile, `${versionFilesBase}/albedoDetail.${ext}`, `Upload AlbedoDetail for version ${version.name}`);
+          delete version.AlbedoDetailDataUrl;
+        }
+
+        // Upload NormalDetail (NEW)
+        if (version.NormalDetailDataUrl) {
+          // Normal maps are always PNG after DX5NM conversion
+          const normalDetailFile = blobToFile(base64ToBlob(version.NormalDetailDataUrl.split(',')[1], 'image/png'), `normalDetail.png`, 'image/png');
+          version.NormalDetail = await uploadSingleFileToGitHub(normalDetailFile, `${versionFilesBase}/normalDetail.png`, `Upload NormalDetail (DX5NM) for version ${version.name}`);
+          delete version.NormalDetailDataUrl;
+        }
+
+        // Upload OcclusionDetail (NEW)
+        if (version.OcclusionDetailDataUrl) {
+          const ext = getFileExtension(occlusionDetailInput.files[0].name);
+          const occlusionDetailFile = blobToFile(base64ToBlob(version.OcclusionDetailDataUrl.split(',')[1], occlusionDetailInput.files[0].type), `occlusionDetail.${ext}`, occlusionDetailInput.files[0].type);
+          version.OcclusionDetail = await uploadSingleFileToGitHub(occlusionDetailFile, `${versionFilesBase}/occlusionDetail.${ext}`, `Upload OcclusionDetail for version ${version.name}`);
+          delete version.OcclusionDetailDataUrl;
+        }
+      }
+    }
+
+    // Salva il dettaglio del singolo modello (full model)
+    await saveSingleModel(currentClient, currentEditingModel);
+
+    // Crea l'oggetto riassuntivo per il catalogo
+    const modelSummaryForCatalog = {
+      name: currentEditingModel.name, // Renamed
+      cover: currentEditingModel.cover, // Ora è già un URL raw
+      collection: currentEditingModel.collection, // Renamed
+      structure: currentEditingModel.structure, // Renamed
+      versionsCount: currentEditingModel.versions?.length ?? 0
+    };
+
+    // Aggiorna la lista locale clients[currentClient] con l'oggetto riassuntivo
+    if (editingIndex === null) {
+      clients[currentClient].push(modelSummaryForCatalog);
+    } else {
+      clients[currentClient][editingIndex] = modelSummaryForCatalog;
+    }
+    
+    // Salva il catalogo del cliente (che ora contiene gli oggetti riassuntivi aggiornati)
+    await saveClientCatalog(currentClient);
+
+    // Aggiorna la lista clienti (se un nuovo cliente è stato aggiunto implicitamente)
+    await saveClientsList();
+
+    renderModelsTable();
+    modelForm.classList.add('hidden');
+    resetForm();
+    alert('Modello salvato con successo su GitHub!');
+
+  } catch (e) {
+    alert('Errore durante il salvataggio del modello su GitHub:\n' + e.message);
+    console.error('Errore salvataggio modello:', e);
+  } finally {
+    hideLoading();
+  }
+});
+
+// MODELLO: delega Modifica / Rimuovi
+modelsTbody.addEventListener('click', async e => { // Reso async
+  const edit = e.target.dataset.edit;
+  const rem  = e.target.dataset.remove;
+
+  if (edit !== undefined) {
+    showLoading();
+    try {
+      editingIndex = Number(edit);
+      const mSummary = clients[currentClient][editingIndex]; // Questo è il modello riassuntivo
+      
+      try {
+        const mFull = await loadModelDetail(currentClient, mSummary.name); // Carica il dettaglio completo (solo versioni)
+        
+        // Combina i dati riassuntivi con le versioni complete
+        currentEditingModel = { 
+          ...mSummary, // Prende name, cover, collection, structure da catalog.json
+          versions: mFull.versions || [] // Prende le versioni da model.json
+        };
+        
+        formTitle.textContent = `Modifica: ${currentEditingModel.name}`;
+        currentModelCoverDataUrl = null; // Reset temporary data URL
+        // Usa getDisplayUrlForFile per la visualizzazione della cover
+        getDisplayUrlForFile(currentEditingModel.cover).then(url => {
+          coverPrev.src = url;
+          updateSaveButtonState(); // Aggiorna lo stato del pulsante dopo il caricamento della cover
+        });
+        nameInput.value = currentEditingModel.name;
+        collectionInput.value = currentEditingModel.collection;
+        structureInput.value = currentEditingModel.structure;
+        piecesCurrent = currentEditingModel.versions ? [...currentEditingModel.versions] : [];
+        pieceForm.classList.add('hidden');
+        renderPiecesTable();
+        modelForm.classList.remove('hidden');
+        window.scrollTo({ top: modelForm.offsetTop - 20, behavior: 'smooth' });
+        updateSaveButtonState(); // Aggiorna lo stato del pulsante inizialmente per la modalità di modifica
+      } catch (error) {
+        alert(`Errore durante il caricamento dei dettagli del modello "${mSummary.name}":\n${error.message}\n\nPotrebbe mancare il file "model.json" su GitHub. Prova a modificare e salvare nuovamente il modello per ricrearlo.`);
+        console.error(`Errore caricamento dettaglio modello ${mSummary.name}`, error);
+        updateSaveButtonState(); // Assicurati che lo stato del pulsante sia aggiornato anche in caso di errore
+      }
+    } finally {
+      hideLoading();
+    }
+  }
+
+  if (rem !== undefined) {
+    showLoading();
+    try {
+      if (!confirm('Rimuovere questo modello e i relativi file?')) return;
+
+      const modelToRemoveSummary = clients[currentClient][+rem]; // Ottieni il riassunto
+      const sanitizedClientName = sanitizeFilename(currentClient);
+      const modelFolderName = sanitizeFilename(modelToRemoveSummary.name); // Use .name
+      const clientModelPath = `Clients/${sanitizedClientName}/${modelFolderName}`;
+
+      let fullModelDetail;
+      try {
+        // Carica i dettagli completi del modello per eliminare i GLB
+        fullModelDetail = await loadModelDetail(currentClient, modelToRemoveSummary.name); // Use modelSummary.name
+      } catch (error) {
+        console.warn(`Dettagli completi per il modello ${modelToRemoveSummary.name} non trovati durante la rimozione, procedo con l'eliminazione dei file noti.`); // Use .name
+        fullModelDetail = { versions: [] }; // Inizializza per evitare errori
+      }
+
+      try {
+        // 1. elimina la cover (se esiste su GitHub)
+        if (modelToRemoveSummary.cover) { // Ora è un URL raw
+          await deleteFileFromGitHub(modelToRemoveSummary.cover,
+            `Delete cover ${modelToRemoveSummary.name}`); // Use .name
+        }
+
+        // 2. elimina ogni GLB del modello
+        for (const p of fullModelDetail.versions ?? []) { // Usa .versions (con URL raw)
+          if (p.glb) {
+            await deleteFileFromGitHub(p.glb,
+              `Delete GLB ${p.glbName} of ${modelToRemoveSummary.name}`); // Use .name
+          }
+          // NEW: Delete version images (paths adjusted)
+          const versionFilesBase = `Clients/${sanitizeFilename(currentClient)}/${sanitizeFilename(modelToRemoveSummary.name)}/Versions/${sanitizeFilename(p.name)}`;
+          if (p.thumbnail) await deleteFileFromGitHub(`${versionFilesBase}/thumbnail.${getFileExtension(p.thumbnail)}`, `Delete Thumbnail for version ${p.name}`);
+          if (p.AlbedoDetail) await deleteFileFromGitHub(`${versionFilesBase}/albedoDetail.${getFileExtension(p.AlbedoDetail)}`, `Delete AlbedoDetail for version ${p.name}`);
+          if (p.NormalDetail) await deleteFileFromGitHub(`${versionFilesBase}/normalDetail.png`, `Delete NormalDetail for version ${p.name}`); // Normal is always PNG
+          if (p.OcclusionDetail) await deleteFileFromGitHub(`${versionFilesBase}/occlusionDetail.${getFileExtension(p.OcclusionDetail)}`, `Delete OcclusionDetail for version ${p.name}`);
+        }
+        // 3. elimina il file model.json del singolo modello
+        await deleteFileFromGitHub(GH_SINGLE_MODEL_PATH(currentClient, modelToRemoveSummary.name), `Delete model.json for ${modelToRemoveSummary.name}`); // Use .name
+
+      } catch (err) {
+        alert('Errore durante la rimozione dei file su GitHub:\n' + err.message);
+        return;
+      }
+
+      // 4. rimuovi dal JSON locale e aggiorna il catalogo del cliente + lista clienti
+      clients[currentClient].splice(rem, 1);
+      await saveClientCatalog(currentClient);
+      await saveClientsList(); // Aggiorna la lista clienti se il catalogo del cliente è ora vuoto
+      renderModelsTable();
+      alert('Modello rimosso con successo da GitHub!');
+    } finally {
+      hideLoading();
+    }
+  }
+});
+
+/* ------- PEZZI -------- */
+addPieceBtn.addEventListener('click', () => {
+  if (!currentClient) {
+    alert('Devi prima selezionare o creare un modello per aggiungere versioni.');
+    return;
+  }
+  pieceEditIdx = null;
+  pieceFormTitle.textContent = 'Nuova versione';
+  pieceNameInput.value = '';
+  pieceTypeInput.value = '';
+  seatNumbersInput.value = ''; // Reset new field
+  armInput.value = ''; // Reset new field
+  glbInput.value = '';
+  // NEW: Reset new image inputs and previews
+  thumbnailPieceInput.value = '';
+  thumbnailPiecePreview.src = 'https://via.placeholder.com/100x100?text=Thumb';
+  albedoDetailInput.value = '';
+  albedoDetailPreview.src = 'https://via.placeholder.com/100x100?text=AlbedoD';
+  normalDetailInput.value = '';
+  normalDetailPreview.src = 'https://via.placeholder.com/100x100?text=NormalD';
+  occlusionDetailInput.value = '';
+  occlusionDetailPreview.src = 'https://via.placeholder.com/100x100?text=OcclusionD';
+
+  pieceForm.classList.remove('hidden');
+  currentPieceGlbDataUrl = null; // Pulisci i dati temporanei
+  currentThumbnailPieceDataUrl = null; // NEW
+  currentAlbedoDetailDataUrl = null;   // NEW
+  currentNormalDetailDataUrl = null;   // NEW
+  currentOcclusionDetailDataUrl = null; // NEW
+});
+
+cancelPieceBtn.addEventListener('click', () => {
+  pieceForm.classList.add('hidden');
+  pieceNameInput.value = '';
+  pieceTypeInput.value = '';
+  seatNumbersInput.value = ''; // Reset new field
+  armInput.value = ''; // Reset new field
+  glbInput.value = '';
+  // NEW: Reset new image inputs and previews
+  thumbnailPieceInput.value = '';
+  thumbnailPiecePreview.src = 'https://via.placeholder.com/100x100?text=Thumb';
+  albedoDetailInput.value = '';
+  albedoDetailPreview.src = 'https://via.placeholder.com/100x100?text=AlbedoD';
+  normalDetailInput.value = '';
+  normalDetailPreview.src = 'https://via.placeholder.com/100x100?text=NormalD';
+  occlusionDetailInput.value = '';
+  occlusionDetailPreview.src = 'https://via.placeholder.com/100x100?text=OcclusionD';
+
+  pieceEditIdx = null;
+  currentPieceGlbDataUrl = null; // Pulisci i dati temporanei
+  currentThumbnailPieceDataUrl = null; // NEW
+  currentAlbedoDetailDataUrl = null;   // NEW
+  currentNormalDetailDataUrl = null;   // NEW
+  currentOcclusionDetailDataUrl = null; // NEW
+});
+
+// Lettura Base64 del file GLB
+glbInput.addEventListener('change', e => {
+  const f = e.target.files[0];
+  if (f) {
+    const reader = new FileReader();
+    reader.onload = (event) => {
+      currentPieceGlbDataUrl = event.target.result; // Memorizza per il caricamento
+    };
+    reader.readAsDataURL(f);
+  }
+});
+
+// Attach file input listeners for version images (using the shared helper)
+thumbnailPieceInput.addEventListener('change', handleFileInputAndPreview(thumbnailPieceInput, thumbnailPiecePreview, (val) => currentThumbnailPieceDataUrl = val));
+albedoDetailInput.addEventListener('change', handleFileInputAndPreview(albedoDetailInput, albedoDetailPreview, (val) => currentAlbedoDetailDataUrl = val));
+normalDetailInput.addEventListener('change', handleFileInputAndPreview(normalDetailInput, normalDetailPreview, (val) => currentNormalDetailDataUrl = val, true)); // Pass true for normal map conversion
+occlusionDetailInput.addEventListener('change', handleFileInputAndPreview(occlusionDetailInput, occlusionDetailPreview, (val) => currentOcclusionDetailDataUrl = val));
+
+
+savePieceBtn.addEventListener('click', async () => { // Made async
+  showLoading();
+  try {
+    if (!currentEditingModel) {
+      alert('Errore: nessun modello in modifica per salvare la versione.');
+      return;
+    }
+
+    const name = pieceNameInput.value.trim();
+    const type = pieceTypeInput.value.trim();
+    const seatNumbers = parseInt(seatNumbersInput.value.trim(), 10); // Get and parse seatNumbers
+    const arm = armInput.value.trim(); // Get arm value
+    const file = glbInput.files[0]; 
+    
+    if (!name || !type || (!currentPieceGlbDataUrl && pieceEditIdx === null && !file)) {
+      alert('Nome versione, tipologia e file GLB obbligatori'); 
+      return; 
+    }
+
+    const glbFilename = `${sanitizeFilename(name)}.glb`;
+    const clientModelPath = `Clients/${sanitizeFilename(currentClient)}/${sanitizeFilename(currentEditingModel.name)}`;
+    const versionsPath = `${clientModelPath}/Versions`;
+    // NEW: Base path for version-specific files (GLB and images)
+    const versionFilesBase = `${versionsPath}/${sanitizeFilename(name)}`; 
+
+    const piece = {
+      versionId : name,
+      name,
+      type,
+      seatNumbers: isNaN(seatNumbers) ? null : seatNumbers, // Save as null if not a valid number
+      Arm: arm,
+      glb     : currentPieceGlbDataUrl ? '' : (pieceEditIdx !== null ? piecesCurrent[pieceEditIdx].glb : ''), 
+      glbDataUrl: currentPieceGlbDataUrl, 
+      glbName : glbFilename,
+      thumbnail: currentThumbnailPieceDataUrl ? '' : (pieceEditIdx !== null ? piecesCurrent[pieceEditIdx].thumbnail : ''), // NEW
+      thumbnailDataUrl: currentThumbnailPieceDataUrl, // NEW
+      AlbedoDetail: currentAlbedoDetailDataUrl ? '' : (pieceEditIdx !== null ? piecesCurrent[pieceEditIdx].AlbedoDetail : ''), // NEW
+      AlbedoDetailDataUrl: currentAlbedoDetailDataUrl, // NEW
+      NormalDetail: currentNormalDetailDataUrl ? '' : (pieceEditIdx !== null ? piecesCurrent[pieceEditIdx].NormalDetail : ''), // NEW
+      NormalDetailDataUrl: currentNormalDetailDataUrl, // NEW
+      OcclusionDetail: currentOcclusionDetailDataUrl ? '' : (pieceEditIdx !== null ? piecesCurrent[pieceEditIdx].OcclusionDetail : ''), // NEW
+      OcclusionDetailDataUrl: currentOcclusionDetailDataUrl, // NEW
+    };
+
+    // Upload GLB if new or changed
+    if (piece.glbDataUrl) {
+      const mimeType = 'model/gltf-binary'; 
+      const base64Content = piece.glbDataUrl.split(',')[1];
+      const glbBlob = base64ToBlob(base64Content, mimeType);
+      const glbFile = blobToFile(glbBlob, glbFilename, mimeType); 
+
+      // uploadSingleFileToGitHub ora restituisce l'URL raw
+      piece.glb = await uploadSingleFileToGitHub(glbFile, `${versionFilesBase}/${glbFilename}`, `Upload GLB for ${piece.name} of ${currentEditingModel.name}`);
+      delete piece.glbDataUrl;
+    } else if (pieceEditIdx !== null && !piece.glb) {
+      piece.glb = convertToRawGitHubUrl(`${versionFilesBase}/${glbFilename}`);
+    }
+
+    // NEW: Upload Thumbnail
+    if (piece.thumbnailDataUrl) {
+      const ext = getFileExtension(thumbnailPieceInput.files[0].name);
+      const thumbnailFile = blobToFile(base64ToBlob(piece.thumbnailDataUrl.split(',')[1], thumbnailPieceInput.files[0].type), `thumbnail.${ext}`, thumbnailPieceInput.files[0].type);
+      piece.thumbnail = await uploadSingleFileToGitHub(thumbnailFile, `${versionFilesBase}/thumbnail.${ext}`, `Upload Thumbnail for version ${piece.name}`);
+      delete piece.thumbnailDataUrl;
+    }
+
+    // NEW: Upload AlbedoDetail
+    if (piece.AlbedoDetailDataUrl) {
+      const ext = getFileExtension(albedoDetailInput.files[0].name);
+      const albedoDetailFile = blobToFile(base64ToBlob(piece.AlbedoDetailDataUrl.split(',')[1], albedoDetailInput.files[0].type), `albedoDetail.${ext}`, albedoDetailInput.files[0].type);
+      piece.AlbedoDetail = await uploadSingleFileToGitHub(albedoDetailFile, `${versionFilesBase}/albedoDetail.${ext}`, `Upload AlbedoDetail for version ${piece.name}`);
+      delete piece.AlbedoDetailDataUrl;
+    }
+
+    // NEW: Upload NormalDetail
+    if (piece.NormalDetailDataUrl) {
+      // Normal maps are always PNG after DX5NM conversion
+      const normalDetailFile = blobToFile(base64ToBlob(piece.NormalDetailDataUrl.split(',')[1], 'image/png'), `normalDetail.png`, 'image/png');
+      piece.NormalDetail = await uploadSingleFileToGitHub(normalDetailFile, `${versionFilesBase}/normalDetail.png`, `Upload NormalDetail (DX5NM) for version ${piece.name}`);
+      delete piece.NormalDetailDataUrl;
+    }
+
+    // NEW: Upload OcclusionDetail
+    if (piece.OcclusionDetailDataUrl) {
+      const ext = getFileExtension(occlusionDetailInput.files[0].name);
+      const occlusionDetailFile = blobToFile(base64ToBlob(piece.OcclusionDetailDataUrl.split(',')[1], occlusionDetailInput.files[0].type), `occlusionDetail.${ext}`, occlusionDetailInput.files[0].type);
+      piece.OcclusionDetail = await uploadSingleFileToGitHub(occlusionDetailFile, `${versionFilesBase}/occlusionDetail.${ext}`, `Upload OcclusionDetail for version ${piece.name}`);
+      delete piece.OcclusionDetailDataUrl;
+    }
+
+
+    if (pieceEditIdx === null) {
+      piecesCurrent.push(piece);
+    } else {
+      // If no new file was selected, retain the existing GLB path
+      if (!piece.glbDataUrl && !piece.glb) {
+        piece.glb = convertToRawGitHubUrl(`${versionFilesBase}/${glbFilename}`);
+      }
+      // If no new image was selected, retain the existing image paths
+      if (!piece.thumbnailDataUrl && !piece.thumbnail) {
+        piece.thumbnail = piecesCurrent[pieceEditIdx].thumbnail;
+      }
+      if (!piece.AlbedoDetailDataUrl && !piece.AlbedoDetail) {
+        piece.AlbedoDetail = piecesCurrent[pieceEditIdx].AlbedoDetail;
+      }
+      if (!piece.NormalDetailDataUrl && !piece.NormalDetail) {
+        piece.NormalDetail = piecesCurrent[pieceEditIdx].NormalDetail;
+      }
+      if (!piece.OcclusionDetailDataUrl && !piece.OcclusionDetail) {
+        piece.OcclusionDetail = piecesCurrent[pieceEditIdx].OcclusionDetail;
+      }
+
+      piecesCurrent[pieceEditIdx] = piece;
+    }
+    
+    // Aggiorna il modello completo in editing con le versioni modificate
+    currentEditingModel.versions = piecesCurrent.map(p => ({ ...p }));
+
+    // Salva il dettaglio del singolo modello (che include le versioni)
+    await saveSingleModel(currentClient, currentEditingModel);
+
+    // Aggiorna l'oggetto riassuntivo nella lista clients[currentClient]
+    // per riflettere il nuovo conteggio delle versioni
+    const modelSummaryForCatalog = {
+      name: currentEditingModel.name,
+      cover: currentEditingModel.cover,
+      collection: currentEditingModel.collection,
+      structure: currentEditingModel.structure,
+      versionsCount: currentEditingModel.versions?.length ?? 0
+    };
+    clients[currentClient][editingIndex] = modelSummaryForCatalog;
+
+    // Aggiorna il catalogo del cliente (solo per coerenza, non cambia per le versioni)
+    await saveClientCatalog(currentClient);
+
+    renderPiecesTable();
+    renderModelsTable(); // Aggiorna la tabella principale per mostrare il conteggio
+    pieceForm.classList.add('hidden');
+    pieceNameInput.value = '';
+    pieceTypeInput.value = '';
+    seatNumbersInput.value = ''; // Reset new field
+    armInput.value = ''; // Reset new field
+    glbInput.value = '';
+    // NEW: Reset new image inputs and previews
+    thumbnailPieceInput.value = '';
+    thumbnailPiecePreview.src = 'https://via.placeholder.com/100x100?text=Thumb';
+    albedoDetailInput.value = '';
+    albedoDetailPreview.src = 'https://via.placeholder.com/100x100?text=AlbedoD';
+    normalDetailInput.value = '';
+    normalDetailPreview.src = 'https://via.placeholder.com/100x100?text=NormalD';
+    occlusionDetailInput.value = '';
+    occlusionDetailPreview.src = 'https://via.placeholder.com/100x100?text=OcclusionD';
+
+    pieceEditIdx = null;
+    currentPieceGlbDataUrl = null;
+    currentThumbnailPieceDataUrl = null; // NEW
+    currentAlbedoDetailDataUrl = null;   // NEW
+    currentNormalDetailDataUrl = null;   // NEW
+    currentOcclusionDetailDataUrl = null; // NEW
+
+    alert('Versione salvata con successo!');
+
+  } catch (e) {
+    alert('Errore durante il salvataggio della versione su GitHub:\n' + e.message);
+    console.error('Errore salvataggio versione:', e);
+  } finally {
+    hideLoading();
+  }
+});
+
+// delega pezzi (Modifica / Rimuovi)
+piecesTbody.addEventListener('click', async e => { // Reso async
+  const pe = e.target.dataset.pedit;
+  const pr = e.target.dataset.premove;
+
+  if (pe !== undefined) {
+    pieceEditIdx = Number(pe);
+    const p = piecesCurrent[pieceEditIdx];
+    pieceFormTitle.textContent = `Modifica versione: ${p.name}`;
+    pieceNameInput.value = p.name;
+    pieceTypeInput.value = p.type || '';
+    seatNumbersInput.value = p.seatNumbers || ''; // Populate new field
+    armInput.value = p.Arm || ''; // Populate new field
+    glbInput.value = '';  // Pulisci l'input del file, ma non il percorso glb nell'oggetto `p`
+    
+    // NEW: Set previews for version images (paths adjusted)
+    thumbnailPiecePreview.src = await getDisplayUrlForFile(p.thumbnail || 'https://via.placeholder.com/100x100?text=Thumb');
+    albedoDetailPreview.src = await getDisplayUrlForFile(p.AlbedoDetail || 'https://via.placeholder.com/100x100?text=AlbedoD');
+    normalDetailPreview.src = await getDisplayUrlForFile(p.NormalDetail || 'https://via.placeholder.com/100x100?text=NormalD');
+    occlusionDetailPreview.src = await getDisplayUrlForFile(p.OcclusionDetail || 'https://via.placeholder.com/100x100?text=OcclusionD');
+
+    // NEW: Clear file inputs for version images
+    thumbnailPieceInput.value = '';
+    albedoDetailInput.value = '';
+    normalDetailInput.value = '';
+    occlusionDetailInput.value = '';
+
+    pieceForm.classList.remove('hidden');
+    currentPieceGlbDataUrl = null; // Pulisci i dati temporanei quando si modifica un pezzo esistente
+    currentThumbnailPieceDataUrl = null; // NEW
+    currentAlbedoDetailDataUrl = null;   // NEW
+    currentNormalDetailDataUrl = null;   // NEW
+    currentOcclusionDetailDataUrl = null; // NEW
+  }
+
+  if (pr !== undefined) {
+    showLoading();
+    try {
+      if (!confirm('Eliminare questa versione e il relativo file?')) return;
+      if (!currentEditingModel) {
+        alert('Errore: nessun modello in modifica per rimuovere la versione.');
+        return;
+      }
+
+      const piece = piecesCurrent[+pr];
+      // NEW: Base path for version-specific files (GLB and images)
+      const versionFilesBase = `Clients/${sanitizeFilename(currentClient)}/${sanitizeFilename(currentEditingModel.name)}/Versions/${sanitizeFilename(piece.name)}`;
+      
+      try {
+        if (piece.glb) { // Ora è un URL raw
+          await deleteFileFromGitHub(piece.glb,
+            `Delete GLB ${piece.glbName}`);
+        }
+        // NEW: Delete version images (paths adjusted)
+        if (piece.thumbnail) await deleteFileFromGitHub(`${versionFilesBase}/thumbnail.${getFileExtension(piece.thumbnail)}`, `Delete Thumbnail for version ${piece.name}`);
+        if (piece.AlbedoDetail) await deleteFileFromGitHub(`${versionFilesBase}/albedoDetail.${getFileExtension(piece.AlbedoDetail)}`, `Delete AlbedoDetail for version ${piece.name}`);
+        if (piece.NormalDetail) await deleteFileFromGitHub(`${versionFilesBase}/normalDetail.png`, `Delete NormalDetail for version ${piece.name}`); // Normal is always PNG
+        if (piece.OcclusionDetail) await deleteFileFromGitHub(`${versionFilesBase}/occlusionDetail.${getFileExtension(piece.OcclusionDetail)}`, `Delete OcclusionDetail for version ${piece.name}`);
+
+      } catch (err) {
+        alert('Errore durante la rimozione del GLB:\n' + err.message);
+        return;
+      }
+
+      // Rimuovi la versione dal modello in editing
+      piecesCurrent.splice(pr, 1);          // 1) togli il pezzo
+      
+      // Aggiorna il modello completo in editing con le versioni modificate
+      currentEditingModel.versions = piecesCurrent.map(p => ({ ...p }));
+
+      // Salva il dettaglio del singolo modello (che include le versioni)
+      await saveSingleModel(currentClient, currentEditingModel);
+
+      // Aggiorna l'oggetto riassuntivo nella lista clients[currentClient]
+      // per riflettere il nuovo conteggio delle versioni
+      const modelSummaryForCatalog = {
+        name: currentEditingModel.name,
+        cover: currentEditingModel.cover,
+        collection: currentEditingModel.collection,
+        structure: currentEditingModel.structure,
+        versionsCount: currentEditingModel.versions?.length ?? 0
+      };
+      clients[currentClient][editingIndex] = modelSummaryForCatalog;
+
+      // Aggiorna il catalogo del cliente (solo per coerenza, non cambia per le versioni)
+      await saveClientCatalog(currentClient);
+
+      renderPiecesTable();
+      renderModelsTable(); // Aggiorna la tabella principale per mostrare il conteggio
+      alert('Versione rimossa con successo!');
+    } finally {
+      hideLoading();
+    }
+  }
+});
+
+// Save texture handler
+saveTextureBtn.addEventListener('click', async () => {
+  showLoading();
+  try {
+    const type = textureTypeInput.value.trim();
+    const name = textureNameInput.value.trim();
+
+    if (!type || !name) {
+      alert('Tipo e Nome Texture sono obbligatori.');
+      return;
+    }
+
+    const textureObject = {
+      type: type,
+      name: name,
+      albedo: currentEditingTexture?.albedo || '',
+      mask: currentEditingTexture?.mask || '',
+      normal: currentEditingTexture?.normal || '',
+      rimNoise: currentEditingTexture?.rimNoise || '',
+      thumbnail: currentEditingTexture?.thumbnail || '', // NEW
+      albedoDataUrl: currentAlbedoDataUrl,
+      maskDataUrl: currentMaskDataUrl,
+      normalDataUrl: currentNormalDataUrl,
+      thumbnailDataUrl: currentThumbnailDataUrl, // NEW
+    };
+
+    const textureBasePath = `Textures/${sanitizeFilename(type)}/${sanitizeFilename(name)}`;
+
+    // Upload Albedo
+    if (textureObject.albedoDataUrl) {
+      const ext = getFileExtension(albedoInput.files[0].name);
+      const albedoFile = blobToFile(base64ToBlob(textureObject.albedoDataUrl.split(',')[1], albedoInput.files[0].type), `albedo.${ext}`, albedoInput.files[0].type);
+      textureObject.albedo = await uploadSingleFileToGitHub(albedoFile, `${textureBasePath}/albedo.${ext}`, `Upload Albedo for ${name}`);
+      delete textureObject.albedoDataUrl;
+    }
+
+    // Upload Mask
+    if (textureObject.maskDataUrl) {
+      const ext = getFileExtension(maskInput.files[0].name);
+      const maskFile = blobToFile(base64ToBlob(textureObject.maskDataUrl.split(',')[1], maskInput.files[0].type), `mask.${ext}`, maskInput.files[0].type);
+      textureObject.mask = await uploadSingleFileToGitHub(maskFile, `${textureBasePath}/mask.${ext}`, `Upload Mask for ${name}`);
+      delete textureObject.maskDataUrl;
+    }
+
+    // Upload Normal
+    if (textureObject.normalDataUrl) {
+      // For normal maps, the file type is always PNG after conversion
+      const normalFile = blobToFile(base64ToBlob(textureObject.normalDataUrl.split(',')[1], 'image/png'), `normal.png`, 'image/png');
+      textureObject.normal = await uploadSingleFileToGitHub(normalFile, `${textureBasePath}/normal.png`, `Upload Normal (DX5NM) for ${name}`);
+      delete textureObject.normalDataUrl;
+    }
+
+    // Upload RimNoise
+    if (textureObject.rimNoiseDataUrl) {
+      const ext = getFileExtension(rimNoiseInput.files[0].name);
+      const rimNoiseFile = blobToFile(base64ToBlob(textureObject.rimNoiseDataUrl.split(',')[1], rimNoiseInput.files[0].type), `rimNoise.${ext}`, rimNoiseInput.files[0].type);
+      textureObject.rimNoise = await uploadSingleFileToGitHub(rimNoiseFile, `${textureBasePath}/rimNoise.${ext}`, `Upload RimNoise for ${name}`);
+      delete textureObject.rimNoiseDataUrl;
+    }
+
+    // Upload Thumbnail (NEW)
+    if (textureObject.thumbnailDataUrl) {
+      const ext = getFileExtension(thumbnailInput.files[0].name);
+      const thumbnailFile = blobToFile(base64ToBlob(textureObject.thumbnailDataUrl.split(',')[1], thumbnailInput.files[0].type), `thumbnail.${ext}`, thumbnailInput.files[0].type);
+      textureObject.thumbnail = await uploadSingleFileToGitHub(thumbnailFile, `${textureBasePath}/thumbnail.${ext}`, `Upload Thumbnail for ${name}`);
+      delete textureObject.thumbnailDataUrl;
+    }
+
+    // Update local array
+    if (editingTextureIndex === null) {
+      textures.push(textureObject);
+    } else {
+      textures[editingTextureIndex] = textureObject;
+    }
+
+    await saveTexturesCatalog();
+    renderTexturesTable();
+    textureFormWrapper.classList.add('hidden');
+    resetTextureForm();
+    alert('Texture salvata con successo su GitHub!');
+
+  } catch (e) {
+    alert('Errore durante il salvataggio della texture su GitHub:\n' + e.message);
+    console.error('Errore salvataggio texture:', e);
+  } finally {
+    hideLoading();
+  }
+});
+
+// Add texture button handler
+addTextureBtn.addEventListener('click', () => {
+  textureFormTitle.textContent = 'Nuova Texture';
+  resetTextureForm();
+  textureFormWrapper.classList.remove('hidden');
+  window.scrollTo({ top: textureFormWrapper.offsetTop - 20, behavior: 'smooth' });
+});
+
+// Cancel texture button handler
+cancelTextureBtn.addEventListener('click', () => {
+  textureFormWrapper.classList.add('hidden');
+  resetTextureForm();
+});
+
+// Delegate edit/remove for textures
+texturesTbody.addEventListener('click', async e => {
+  const edit = e.target.dataset.tedit;
+  const rem = e.target.dataset.tremove;
+
+  if (edit !== undefined) {
+    showLoading();
+    try {
+      editingTextureIndex = Number(edit);
+      currentEditingTexture = { ...textures[editingTextureIndex] }; // Clone for editing
+
+      textureFormTitle.textContent = `Modifica Texture: ${currentEditingTexture.name}`;
+      textureTypeInput.value = currentEditingTexture.type;
+      textureNameInput.value = currentEditingTexture.name;
+
+      // Set previews and clear file inputs
+      albedoPreview.src = await getDisplayUrlForFile(currentEditingTexture.albedo || 'https://via.placeholder.com/100x100?text=Albedo');
+      maskPreview.src = await getDisplayUrlForFile(currentEditingTexture.mask || 'https://via.placeholder.com/100x100?text=Mask');
+      normalPreview.src = await getDisplayUrlForFile(currentEditingTexture.normal || 'https://via.placeholder.com/100x100?text=Normal');
+      rimNoisePreview.src = await getDisplayUrlForFile(currentEditingTexture.rimNoise || 'https://via.placeholder.com/100x100?text=RimNoise');
+      thumbnailPreview.src = await getDisplayUrlForFile(currentEditingTexture.thumbnail || 'https://via.placeholder.com/100x100?text=Thumbnail'); // NEW
+
+      albedoInput.value = '';
+      maskInput.value = '';
+      normalInput.value = '';
+      rimNoiseInput.value = '';
+      thumbnailInput.value = ''; // NEW
+
+      currentAlbedoDataUrl = null;
+      currentMaskDataUrl = null;
+      currentNormalDataUrl = null;
+      currentRimNoiseDataUrl = null;
+      currentThumbnailDataUrl = null; // NEW
+
+      textureFormWrapper.classList.remove('hidden');
+      window.scrollTo({ top: textureFormWrapper.offsetTop - 20, behavior: 'smooth' });
+    } finally {
+      hideLoading();
+    }
+  }
+
+  if (rem !== undefined) {
+    showLoading();
+    try {
+      if (!confirm('Sei sicuro di voler rimuovere questa texture e tutti i suoi file associati da GitHub? Questa azione è irreversibile!')) {
+        return;
+      }
+
+      const textureToRemove = textures[+rem];
+      const textureBasePath = `Textures/${sanitizeFilename(textureToRemove.type)}/${sanitizeFilename(textureToRemove.name)}`;
+
+      // Delete all associated files
+      if (textureToRemove.albedo) await deleteFileFromGitHub(textureToRemove.albedo, `Delete Albedo for ${textureToRemove.name}`);
+      if (textureToRemove.mask) await deleteFileFromGitHub(textureToRemove.mask, `Delete Mask for ${textureToRemove.name}`);
+      if (textureToRemove.normal) await deleteFileFromGitHub(textureToRemove.normal, `Delete Normal for ${textureToRemove.name}`);
+      if (textureToRemove.rimNoise) await deleteFileFromGitHub(textureToRemove.rimNoise, `Delete RimNoise for ${textureToRemove.name}`);
+      if (textureToRemove.thumbnail) await deleteFileFromGitHub(textureToRemove.thumbnail, `Delete Thumbnail for ${textureToRemove.name}`); // NEW
+
+      // Remove from local array and save catalog
+      textures.splice(rem, 1);
+      await saveTexturesCatalog();
+      renderTexturesTable();
+      alert('Texture rimossa con successo da GitHub!');
+    } catch (e) {
+      alert('Errore durante la rimozione della texture su GitHub:\n' + e.message);
+      console.error('Errore rimozione texture:', e);
+    } finally {
+      hideLoading();
+    }
+  }
+});
+
+// Attach file input listeners for textures
+albedoInput.addEventListener('change', handleFileInputAndPreview(albedoInput, albedoPreview, (val) => currentAlbedoDataUrl = val));
+maskInput.addEventListener('change', handleFileInputAndPreview(maskInput, maskPreview, (val) => currentMaskDataUrl = val));
+normalInput.addEventListener('change', handleFileInputAndPreview(normalInput, normalPreview, (val) => currentNormalDataUrl = val, true)); // Pass true for normal map conversion
+rimNoiseInput.addEventListener('change', handleFileInputAndPreview(rimNoiseInput, rimNoisePreview, (val) => currentRimNoiseDataUrl = val));
+thumbnailInput.addEventListener('change', handleFileInputAndPreview(thumbnailInput, thumbnailPreview, (val) => currentThumbnailDataUrl = val)); // NEW
+
+// Add color button handler
+addColorBtn.addEventListener('click', () => {
+  editingColorIndex = null;
+  currentEditingColor = null;
+  colorFormTitle.textContent = 'Nuovo Colore';
+  colorTypeInput.value = '';
+  colorCollectionInput.value = '';
+  toggleColorForm(true);
+});
+
+// Cancel color form
+cancelColorBtn.addEventListener('click', () => {
+  toggleColorForm(false);
+  resetColorForm();
+});
+
+// Add new color
+function addNewColor() {
+  const type = document.getElementById('colorTypeInput').value.trim();
+  const collectionStr = document.getElementById('colorCollectionInput').value.trim();
+  
+  if (!type) {
+    alert('Inserisci un tipo di colore');
+    return;
+  }
+  
+  if (!collectionStr) {
+    alert('Inserisci almeno un valore nella collezione');
+    return;
+  }
+  
+  const collection = collectionStr.split(',').map(item => item.trim()).filter(item => item);
+  
+  if (collection.length === 0) {
+    alert('Inserisci almeno un valore valido nella collezione');
+    return;
+  }
+  
+  const newColor = {
+    type,
+    collection
+  };
+  
+  if (editingColorIndex !== null) {
+    // Edit existing color
+    colors[editingColorIndex] = newColor;
+  } else {
+    // Add new color
+    colors.push(newColor);
+  }
+  
+  // Log the color being added
+  console.log('Colore aggiunto/modificato:', newColor);
+  
+  // Immediately render the table with the new color
+  renderColorsTable();
+  resetColorForm();
+  toggleColorForm(false);
+  
+  // Then try to save to GitHub (this is now just logging to console)
+  saveColorsCatalog()
+    .catch(error => {
+      console.error('Errore nel salvataggio del colore:', error);
+      alert('Errore nel salvataggio del colore. Controlla la console per dettagli.');
+    });
+}
+
+// Save color
+saveColorBtn.addEventListener('click', addNewColor);
+
+// Delegate edit/remove for colors
+colorsTbody.addEventListener('click', async e => {
+  const edit = e.target.dataset.cedit;
+  const rem = e.target.dataset.cremove;
+  
+  if (edit !== undefined) {
+    editingColorIndex = Number(edit);
+    currentEditingColor = { ...colors[editingColorIndex] };
+    
+    colorFormTitle.textContent = `Modifica Colore: ${currentEditingColor.type}`;
+    colorTypeInput.value = currentEditingColor.type;
+    colorCollectionInput.value = currentEditingColor.collection.join(', ');
+    
+    toggleColorForm(true);
+    window.scrollTo({ top: colorFormWrapper.offsetTop - 20, behavior: 'smooth' });
+  }
+  
+  if (rem !== undefined) {
+    if (!confirm('Sei sicuro di voler rimuovere questo colore? Questa azione è irreversibile!')) {
+      return;
+    }
+    
+    try {
+      colors.splice(rem, 1);
+      await saveColorsCatalog();
+      renderColorsTable();
+      alert('Colore rimosso con successo!');
+    } catch (e) {
+      alert(`Errore durante la rimozione del colore: ${e.message}`);
+      console.error('Errore rimozione colore:', e);
+    }
+  }
+});
+
+/* -------- AVVIO -------- */
+// Aggiungi listener per l'input del nome del modello
+nameInput.addEventListener('input', updateSaveButtonState);
+
+refreshClientSelect();
+loadClients().then(() => { // La chiamata iniziale per caricare i clienti rimane
+  updateSaveButtonState(); // Chiamata iniziale per impostare lo stato del pulsante
+});
+loadTextures(); // Carica le texture all'avvio
+
+// Mostra la sezione modelli per impostazione predefinita all'avvio
+clientsSection.classList.remove('hidden');
+modelsSection.classList.remove('hidden');
+texturesSection.classList.add('hidden');
+colorsSection.classList.add('hidden');
+modelForm.classList.add('hidden'); // Ensure model form is hidden initially
+textureFormWrapper.classList.add('hidden'); // Ensure texture form is hidden initially
+colorFormWrapper.classList.add('hidden'); // Ensure color form is hidden initially
+});
+</script>
+</body>
+</html>
